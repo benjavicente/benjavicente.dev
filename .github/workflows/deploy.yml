@@ -33,8 +33,8 @@ jobs:
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: YOUR_ACCOUNT_ID
-          projectName: YOUR_PROJECT_NAME
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
           directory: out
           # This trigers a GitHub Deployment event
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
