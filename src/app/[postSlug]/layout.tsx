@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { getPosts } from "../getPosts";
+import { getPosts } from "../../getPosts";
 
 export default function PostLayout({ children }: { children: ReactNode }) {
   return children;

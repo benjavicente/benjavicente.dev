@@ -13,8 +13,12 @@ export function Confetti() {
 
   return (
     <button
-      onClick={() => setHasConfeti(!hasConfeti)}
-      className="w-full flex flex-col justify-center items-center bg-forest-800 rounded"
+      onClick={() => {
+        setHasConfeti(true);
+        setTimeout(() => setHasConfeti(false), 300);
+      }}
+      disabled={hasConfeti}
+      className="w-full flex flex-col justify-center items-center bg-forest-700 rounded disabled:bg-forest-800"
     >
       {hasConfeti ? "🎉" : null} yay {hasConfeti ? "🎉" : null}
       <ConfettiExplosion active={hasConfeti} config={confettiConfig} />

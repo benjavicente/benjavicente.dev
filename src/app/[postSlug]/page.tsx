@@ -1,5 +1,5 @@
 import { MDX } from "./mdx";
-import { getPostBySlug, getPosts } from "../getPosts";
+import { getPostBySlug, getPosts } from "../../getPosts";
 import { Metadata } from "next";
 import fs from "fs";
 
@@ -22,13 +22,14 @@ async function getPostComponents(slug: string) {
   const ext = componentsFiles[0].extension;
 
   try {
-    return await import(`../../public/${slug}/components.${ext}`);
+    return await import(`../../../public/${slug}/components.${ext}`);
   } catch (e) {
     // @ts-ignore (it's dumb to type this)
     if (!e || e.code !== "MODULE_NOT_FOUND") throw e;
     return {};
   }
 }
+
 export async function generateMetadata({ params }: { params: { postSlug: string } }): Promise<Metadata> {
   const post = await getPostBySlug(params.postSlug);
 
