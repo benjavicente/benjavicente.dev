@@ -2,15 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global */
+
 html {
   background: hsl(196, 47%, 11%);
   color: hsl(200, 40%, 96%);
 }
 
+/* Utils */
+
 .limit-width {
-  max-width: theme("screens.md");
+  max-width: theme("screens.sm");
   margin: 0 auto;
 }
+
+/* Magic Border */
 
 @property --magic-border-spacing {
   syntax: "<number>";

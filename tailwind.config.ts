@@ -1,19 +1,8 @@
 import type { Config } from "tailwindcss";
+import prose from "@tailwindcss/typography";
 
-// color: #f8fcfc;
-// color: #f1f9f8;
-// color: #e1eeef;
-// color: #94b5b8;
-// color: #94b5b8;
-// color: #65888b;
-// color: #48676a;
-// color: #345356;
-// color: #1d363a;
-// color: #0f2429;
-// color: #021217;
-
-const config: Config = {
-  content: ["./public/**/*.{js,ts,jsx,tsx,mdx}", "./app/**/*.{js,ts,jsx,tsx,mdx}"],
+const config = {
+  content: ["./{public,app}/**/*.{js,ts,jsx,tsx,mdx}", "./app/**/*.{js,ts,jsx,tsx,md,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -33,7 +22,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
-};
+  plugins: [prose],
+} satisfies Config;
 
 export default config;
