@@ -4,14 +4,26 @@ import { getPosts } from "./getPosts";
 export default async function Home() {
   const posts = await getPosts();
   return (
-    <main>
-      <ol>
-        {posts.map((post) => (
-          <li key={post.slug}>
-            <Link href={`/${post.slug}/`}>{post.frontmatter.title}</Link>
-          </li>
-        ))}
-      </ol>
+    <main className="p-2 limit-width">
+      {posts.map((post) => (
+        <Link
+          key={post.slug}
+          href={`/${post.slug}/`}
+          className="block transition-all magic-border duration-300 px-4 py-6"
+        >
+          <article>
+            <h2 className="text-2xl text-orange-400 font-bold">{post.frontmatter.title}</h2>
+            <time dateTime={post.frontmatter.date.toISOString()} className="text-forest-400">
+              {Intl.DateTimeFormat("en", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }).format(post.frontmatter.date)}
+            </time>
+            <p className="text-forest-300">{post.frontmatter.description}</p>
+          </article>
+        </Link>
+      ))}
     </main>
   );
 }

@@ -3,11 +3,12 @@ import matter from "gray-matter";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { z } from "zod";
+import "@total-typescript/ts-reset/filter-boolean";
 
 const frontmatterSchema = z.object({
   title: z.string(),
-  date: z.date(),
-  description: z.string().optional(),
+  date: z.coerce.date(),
+  description: z.string(),
 });
 
 export const getPosts = cache(async () => {
@@ -28,13 +29,18 @@ export const getPosts = cache(async () => {
       .map(async ({ path, dir }) => {
         const source = await readFile(path, "utf8");
         const { data, content } = matter(source);
-        const frontmatter = frontmatterSchema.parse(data);
-        return { content, frontmatter, slug: dir.name };
+        const frontmatter = frontmatterSchema.safeParse(data);
+
+        if (frontmatter.success === false) {
+          console.warn("Invalid frontmatter in", path);
+          return null;
+        }
+
+        return { content, frontmatter: frontmatter.data, slug: dir.name };
       })
   );
 
-  postsMeta.sort((a, b) => b.frontmatter.date.getTime() - a.frontmatter.date.getTime());
-  return postsMeta;
+  return postsMeta.filter(Boolean).toSorted((a, b) => b.frontmatter.date.getTime() - a.frontmatter.date.getTime());
 });
 
 export type Post = Awaited<ReturnType<typeof getPosts>>[number];
