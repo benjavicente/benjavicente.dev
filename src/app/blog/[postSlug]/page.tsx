@@ -1,10 +1,10 @@
 import { MDX } from "./mdx";
-import { getPostBySlug, getPosts } from "../../getPosts";
+import { getPostBySlug } from "../../../getPosts";
 import { Metadata } from "next";
 import fs from "fs";
 
 async function getPostComponents(slug: string) {
-  const dir = `./public/${slug}`;
+  const dir = `./public/blog/${slug}`;
   const files = fs.readdirSync(dir, { withFileTypes: true });
 
   const re = /^components.(js|jsx|ts|tsx)$/;
@@ -22,7 +22,7 @@ async function getPostComponents(slug: string) {
   const ext = componentsFiles[0].extension;
 
   try {
-    return await import(`../../../public/${slug}/components.${ext}`);
+    return await import(`../../../../public/blog/${slug}/components.${ext}`);
   } catch (e) {
     // @ts-ignore (it's dumb to type this)
     if (!e || e.code !== "MODULE_NOT_FOUND") throw e;

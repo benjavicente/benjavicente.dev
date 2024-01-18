@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "run-p watch-content next-dev",
     "next-dev": "next dev",
-    "watch-content": "node ./watcher.js",
+    "watch-content": "node ./watcher.mjs",
     "build": "next build",
     "start": "serve out",
     "lint": "next lint"
@@ -30,6 +30,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "chokidar": "^3.5.3",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "next-remote-watch": "^2.0.0",

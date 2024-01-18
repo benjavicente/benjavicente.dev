@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { type Post, getPostBySlug, getPosts } from "../../../getPosts";
+import { type Post, getPostBySlug, getPosts } from "../../../../getPosts";
 
 import { colors } from "@/theme";
 import { readFileSync } from "fs";

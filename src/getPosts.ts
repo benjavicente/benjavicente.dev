@@ -12,13 +12,13 @@ const frontmatterSchema = z.object({
 });
 
 export const getPosts = cache(async () => {
-  const directories = await readdir("./public", { withFileTypes: true });
+  const directories = await readdir("./public/blog", { withFileTypes: true });
 
   const postsDirs = directories.filter((dirent) => dirent.isDirectory());
 
   const checkedPaths = await Promise.all(
     postsDirs.map(async (postDir) => {
-      const path = `./public/${postDir.name}/index.md`;
+      const path = `./public/blog/${postDir.name}/index.md`;
       return { file: await stat(path), path, dir: postDir };
     })
   );

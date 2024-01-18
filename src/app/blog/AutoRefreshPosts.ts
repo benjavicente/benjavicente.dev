@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-export function AutoRefresh() {
+export function AutoRefreshPosts() {
   const router = useRouter();
 
   const refreshRef = useRef(router.refresh);
