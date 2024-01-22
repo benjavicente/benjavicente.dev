@@ -1,7 +1,5 @@
 # [benjavicente.dev](https://benjavicente.dev)
 
-[![CI](https://g
-
 Personal site and blog build with:
 
 - [React](https://reactjs.org/) on [Next.js](https://nextjs.org/)'s App Router with [TypeScript](https://www.typescriptlang.org/).
