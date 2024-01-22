@@ -1,6 +1,6 @@
 ---
 title: Hello world!
-date: 2023-01-13
+date: 2023-01-22
 description: First post of the blog
 ---
 
