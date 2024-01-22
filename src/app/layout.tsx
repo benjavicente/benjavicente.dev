@@ -6,14 +6,14 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BenjaVicente",
-  metadataBase: new URL("https://benjavicente.dev"),
+	title: "BenjaVicente",
+	metadataBase: new URL("https://benjavicente.dev"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body className={inter.className}>{children}</body>
+		</html>
+	);
 }
