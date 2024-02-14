@@ -220,18 +220,21 @@ def handler(req):
 
 ![Boxes shiwing the Handler inyecting the context to a global store, and helper c consuming it](./ctx-global.png)
 
-Somewhere, a function will need to be responsable for setting the context that the request handler will need. Here, it's the `handler` function, and inyects the `user` into a global variable.
-The power of this global variables comes into play on **function composition**:
+Somewhere, a function will be responsable for setting the context that other context might need. Here, it's the `handler` function, and inyects the `user` into a global variable.
+This leads to less coupling, bacause helperdon't have the context as argument, and with more flexibility thanks to **function composition**:
 
-```py {13}
+```py {11,16}
 from flask import Flask, request, r
 
 app = Flask(__name__)
 
+def get_user_id_from_path():  # [!code focus]
+  return request.view_args["userId"]  # [!code focus]
+
 def get_user():  # [!code focus]
   "Get the user, memoize it, and return it."  # [!code focus]
   if not g.user:  # [!code focus]
-    g.user = User.find(request.view_args["userId"])  # [!code focus]
+    g.user = User.find(get_user_id_from_path())  # [!code focus]
   return g.user  # [!code focus]
 
 @app.route("/<userId>")
@@ -240,24 +243,13 @@ def handle():  # [!code focus]
   return f"Hello, {user.name}"  # [!code focus]
 ```
 
-Flask is a mix of both, giving global proxy methods, that provide
-a `request` object, `g` for shared state, and other utilities at module level
-instead of inside instance attributes or handler arguments ([see Blueprint docs](https://flask.palletsprojects.com/en/3.0.x/tutorial/views/#id5)).
+The previous example uses [Flask Context](https://flask.palletsprojects.com/en/3.0.x/appcontext/). The `get_user_id_from_path` function reads from the request, and `get_user` calls `get_user_id_from_path` (without arguments) and uses `g` for memoization.
+Both function request to the context what they need, without having to pass it as an argument.
 
+Using a global variable fels like an anti-pattern, that can easselly fall apart. The trick for this to work is to make it an accesor of a context that can be only be inyected by a specific, more private function. This is how Flask does it, with [contextvars][python-contextvars] (from stdlib) and [proxy helper from werkzeug][werkzeug-proxy].
 
-```py
-from flask import Flask, request, g
-
-app = Flask(__name__)
-
-@app.before_request
-def before_request():
-    g.user = User.find(request.view_args["userId"])
-
-@app.route("/<userId>")
-def index():
-    return f"Hello, {g.user.name}"
-```
+[python-contextvars]: https://werkzeug.palletsprojects.com/en/3.0.x/local/#werkzeug.local.LocalProxy
+[werkzeug-proxy]: https://werkzeug.palletsprojects.com/en/3.0.x/local/#werkzeug.local.LocalProxy
 
 ## Context Injection
 
