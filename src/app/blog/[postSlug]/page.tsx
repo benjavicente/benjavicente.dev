@@ -74,8 +74,7 @@ export default async function Post({ params }: { params: { postSlug: string } })
 						}).format(frontmatter.date)}
 					</time>
 				</div>
-
-				<div className="prose prose-invert">
+				<div className="prose prose-invert prose-pre:">
 					<MDX source={content} components={components} />
 				</div>
 			</article>

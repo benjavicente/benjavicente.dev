@@ -32,7 +32,7 @@ export const getPosts = cache(async () => {
 				const frontmatter = frontmatterSchema.safeParse(data);
 
 				if (frontmatter.success === false) {
-					console.warn("Invalid frontmatter in", path);
+					console.warn("Invalid frontmatter in", path, frontmatter.error.message);
 					return null;
 				}
 

@@ -1,0 +1,48 @@
+.prose > aside {
+	border-left: theme("spacing.1") solid theme("colors.forest.600");
+	padding-left: theme("spacing.4");
+	color: theme("colors.forest.400");
+}
+
+.prose > aside a,
+.prose > aside code,
+.prose > aside strong {
+	color: theme("colors.forest.300");
+}
+
+.shiki {
+	padding: theme("spacing.3") theme("spacing.4");
+}
+
+.shiki > code {
+	width: 100%;
+	display: block;
+}
+
+.shiki .highlighted {
+	margin: 0 calc(-1 * theme("spacing.4"));
+	padding: 0 theme("spacing.4");
+	border-radius: theme("borderRadius.lg");
+	background: theme("colors.forest.800");
+	display: inline-block;
+	border-radius: unset;
+	width: calc(100% + theme("spacing.8"));
+}
+
+.shiki .highlighted-word {
+	background: theme("colors.forest.800");
+	padding: theme("spacing[0.5]");
+	margin: calc(-1 * theme("spacing[0.5]"));
+	border-radius: theme("borderRadius.lg");
+}
+
+.shiki.has-focused .line:not(.focused) {
+	transition:
+		filter 0.35s,
+		opacity 0.35s;
+}
+
+.shiki.has-focused:not(:hover) .line:not(.focused) {
+	filter: blur(0.095rem);
+	opacity: 0.7;
+}
