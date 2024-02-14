@@ -3,7 +3,7 @@
 // from https://github.com/withastro/starlight/blob/main/packages/starlight/integrations/asides.ts#L48
 
 import { h } from "hastscript";
-import type { Root, Node } from "mdast";
+import type { Root, Node, Parent } from "mdast";
 import type { Transformer } from "unified";
 import { visit } from "unist-util-visit";
 import { type Directives, directiveToMarkdown, type TextDirective, type LeafDirective } from "mdast-util-directive";
