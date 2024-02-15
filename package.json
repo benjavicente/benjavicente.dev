@@ -27,6 +27,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-dom-confetti": "^0.2.0",
+    "reading-time": "^1.5.0",
     "remark-directive": "^3.0.0",
     "shiki": "^1.1.1",
     "unified": "^11.0.4",

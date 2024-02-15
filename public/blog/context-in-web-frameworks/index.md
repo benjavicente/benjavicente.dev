@@ -151,33 +151,26 @@ def handler(req):
   helper_a(req)
 ```
 
-Note that **class based frameworks like Rails don't suffer from this as much**. Thats because those can take advantage of class based design patterns and metaprograming. The controller class could extend helpers classes (mixin), so the context would be available to helper C methods without manually passing it.
+Note that **class based frameworks like Rails don't suffer from this**.
+That's because those can take advantage of class based design patterns. The controller class could extend helpers classes (mixin) or use private methods, so the context would be available to helpers methods without manually passing it.
 
 ```rb
-module HelperC
+module ModuleC
   def helper_c
     puts "Hello, #{@user.name}"  # [!code highlight]
   end
 end
 
-module HelperB
-  include HelperC
+module ModuleB
+  include ModuleC
 
   def helper_b
     helper_c
   end
 end
 
-module HelperA
-  include HelperB
-
-  def helper_a
-    helper_b
-  end
-end
-
 class Controller
-  include HelperB
+  include ModuleB
 
   def initialize
     # Here, the context is added to the class instance # [!code highlight]
@@ -187,17 +180,22 @@ class Controller
   def index
     helper_a
   end
+
+  @private
+
+  def helper_a
+    helper_b
+  end
 end
 ```
 
-The code above is more verbose, but assuming the helpers follow an opinated and predictable pattern for the entire application, the end result provides cleaner and more maintainable code thanks to lower coupling.
-
+The code above feels more verbose, but assuming the helpers follow an opinated and predictable pattern for the entire application, the end result provides cleaner and more maintainable code thanks to lower coupling.
 
 So the question is: **In functional based frameworks, is it posible to pass a the context arround without the problems mentioned before, and the depeloper experience that class based frameworks might provide?**
 
 ## Context Injection
 
-The really stupid and unmaintainable anwser would be to create a global variable and set it before calling the helper functions. It's easy, will not fail in traditional functions, and if it is only used in one place, it's secure enough.
+The really stupid and more unmaintainable anwser would be to create a global variable and set it before calling the helper functions. It's easy, will not fail in traditional functions, and if it is only used in one place, it's secure enough.
 
 ```py
 g = SimpleNamespace() # like a dict but with dot access
@@ -246,16 +244,283 @@ def handle():  # [!code focus]
 The previous example uses [Flask Context](https://flask.palletsprojects.com/en/3.0.x/appcontext/). The `get_user_id_from_path` function reads from the request, and `get_user` calls `get_user_id_from_path` (without arguments) and uses `g` for memoization.
 Both function request to the context what they need, without having to pass it as an argument.
 
-Using a global variable fels like an anti-pattern, that can easselly fall apart. The trick for this to work is to make it an accesor of a context that can be only be inyected by a specific, more private function. This is how Flask does it, with [contextvars][python-contextvars] (from stdlib) and [proxy helper from werkzeug][werkzeug-proxy].
+Using a global variable fels like an anti-pattern, that can easselly fall apart. The trick for this to work is to make it an accesor of a context that can be only be inyected by a specific, more private function. This is how Flask does it, with [contextvars][python-contextvars] and [proxy helper from werkzeug][werkzeug-proxy].
 
 [python-contextvars]: https://werkzeug.palletsprojects.com/en/3.0.x/local/#werkzeug.local.LocalProxy
 [werkzeug-proxy]: https://werkzeug.palletsprojects.com/en/3.0.x/local/#werkzeug.local.LocalProxy
 
-## Context Injection
+
+In frontend land, the classic example is React's hooks.
+Hooks works thanks to a context, to tracks hooks calls, that is inyected when the component is rendered and re-rendered (you can see [how that works here][how-react-hooks-works]).
+This pattern makes decoupling more natural, because state works puerly by function composition.
+
+
+[how-react-hooks-works]: https://medium.com/@ryardley/react-hooks-not-magic-just-arrays-cd4f1857236e
+
+```tsx
+import { useState } from "react";
+
+function Component() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
 
 
 
-## Indirect Context
+---
+
+To understand how do build a system that can inyect the context in a secure way, a helfull exersice could be to try to replicate React's [`cache`][react-cache] function.
+Thas function **memoizes the given function for the request** in server components.
+
+[react-cache]: https://react.dev/reference/react/cache
+
+```ts
+type Fn<A, R> = (...a: A) => R;
+const work = (message: number | string) => console.log(message);
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+```
+
+Ignoring considering arguments for memoization because it requires a tree structure out of the scope of this article for this problem.
+The objective would be to make **memoize `work` by request** per request.
+Implementing global memoization can be done easily with:
+
+
+```ts
+function once<A extends any[], R>(fn: Fn<A, R>): Fn<A, R> {
+  let v: R | Symbol = Symbol();
+  // If v is the sentry value, asign v to the result value
+  // of the function, and return v. Otherwise, return v.
+  return (...a) => (v === onceSentryValue ? (v = fn(...a)) : v);
+}
+
+const onceWork = once(work);
+onceWork("this runs");
+onceWork("but this doesn't");
+```
+
+The next step is to implement a mechanism to inyect before and clean the context
+after a given request. Bacause the context should allways be cleaned, it's necesary to use `try`/`finally`. And since this would need to be repeated for every function, it better to wrap it in a function.
+
+```ts
+// Global store, to store the sentry value for each context
+const contextStore: WeakMap<Symbol, any>[] = [];
+
+function withCtx<R>(fn: () => R): R {
+  // Inyect the necesary context to the global store
+  contextStore.push(new WeakMap());
+  try {
+    // Run the given function
+    return fn();
+  } finally {
+    // Clean the context even if the function throws
+    contextStore.pop();
+  }
+}
+```
+
+The inyect and cleanup steps could do something diferent.
+In this case, a map is pushed to a global store stack when `withCtx` is called.
+In the following `onceCtx` function, the map on top of the context store stack is used to store the memoized values.
+
+```ts
+function onceCtx<A extends any[], R>(fn: Fn<A, R>): Fn<A, R> {
+  // Unique key per call to once
+  const key = Symbol();
+  return (...args) => {
+    // Get the last ctx pushed to the global store
+    const store = contextStore.at(-1);
+    // Run the function if there's no ctx
+    if (!store) return fn(...args);
+    // If the ctx has has the key, it's memoized, return it
+    if (store.has(key)) return store.get(key);
+    // Otherwise, memoize the result and return it
+    const value = fn(...args);
+    store.set(key, value);
+    return value;
+  };
+}
+
+
+const onceWorkPerContext = onceCtx(work);
+
+const otherWork = () => onceWorkPerContext("other");
+
+withCtx(() => {
+  onceWorkPerContext(1);   // Will show 1
+  otherWork();             // Memoized, will not show anything
+  withCtx(() => {
+    onceWorkPerContext(2); // Will show 2
+  });
+});
+
+withCtx(() => {
+  onceWorkPerContext(3);   // Will show 3
+  withCtx(() => {
+    otherWork();           // Will show "other"
+    onceWorkPerContext(4); // Memoized, will not show anything
+  });
+});
+```
+
+---
+
+
+This works in fully synchronous code, but real applications usuallly have callback patterns, async code and, in other languajes, threads.
+Working with async or threads would require hooking into the event loop or the thread scheduler, so a build-in solution is the best option.
+
+In Python, the `contextvars` module is build in in Python 3.7, and supports async code, threads and the avility to copy the context to be used in callbacks.
+In the JS land, node version 16 and up exposes **`AsyncLocalStorage`** from the `async_hooks` module, that can be used to fix the async problem.
+
+```ts
+const asyncCtxStore = new AsyncLocalStorage<WeakMap<Symbol, any>>();
+function withAsyncCtx<R>(callback: () => R): R {
+  return asyncCtxStore.run(new WeakMap(), callback);  // [!code highlight]
+}
+
+function onceACtx<A extends any[], R>(fn: Fn<A, R>): Fn<A, R> {
+  const key = Symbol();
+  return (...args) => {
+    const store = contextStore.at(-1);  // [!code --]
+    const store = asyncCtxStore.getStore();  // [!code ++]
+
+    if (!store) return fn(...args);
+
+    if (store.has(key)) return store.get(key);
+
+    const value = fn(...args);
+    store.set(key, value);
+    return value;
+  };
+}
+
+const onceWorkPerAsyncContext = onceACtx(work);
+
+await withAsyncCtx(async () => {
+  onceWorkPerAsyncContext(1);  // This will show 1
+  await wait(100);
+  onceWorkPerAsyncContext(2);  // Memoized, will not show anything
+});
+```
+
+This solution is dependant of this Node API, some other runtimes might implement it for compatibility, but it's not guaranteed. The [tc39 Async Context proposal][tc39-acp] (stage 2) will bring a standar API for the ecosistem, if the proposal is accepted to the ECMAScript standard.
+Right now, the solution is not fully stable.
+
+
+[tc39-acp]: https://github.com/tc39/proposal-async-context
+
+
+---
+
+For a more real-world example, imagine a handler should not be able to access the request directly, so getter functions like `headers` should be exported publicly. The private request object could be stored in the async context, and the getter functions could access it.
+
+
+```ts
+const requestStore = new AsyncLocalStorage<Request>();
+
+// Public getter functions
+export function headers(): Headers {
+  const store = requestStore.getStore();
+  if (!store) return new Headers();
+  return store.headers;
+}
+
+// Internal for the framework
+function run(action) {
+  const formData = new FormData();
+  formData.append("example", "formdata")
+
+  const path = "random-path-generated-at-build-time";
+  const r = new Request(`https://example.com/_rpc/${path}`, {
+    headers: { example: "header" },
+    body: formData,
+  });
+
+  requestStore.run(r, async () => action(await r.formData()));
+}
+```
+
+Then, functions can be defined in userland code using the public getters.
+The framework will inyect the request context before running the action.
+
+
+```ts
+import { headers } from "framework";
+
+async function serverAction(form: FormData) {
+  console.log(form);
+  const headersStore = headers();
+  console.log(headersStore);
+}
+
+run(serverAction); // Automatically handler by the framework
+```
+
+That's [how NextJS handles server actions][nextjs-sa]. NextJS uses stores to detect the context of where the `headers` getter is called, like the type of page or in a server action, and return the headers inyected by the mechanism that rendered the page.
+
+[nextjs-sa]: https://github.com/vercel/next.js/blob/canary/packages/next/src/client/components/headers.ts#L36
+
+This patter is available also in Nitro framework (used in Nuxt) with the [`experimental.asyncContext` flag, providing an workflow that matches Vue's Composition API][vue-ac] or signal based solutions.
+
+[vue-ac]: https://nitro.unjs.io/guide/utils#experimental-composition-api
+
+```ts
+export default defineEventHandler(async () => {
+  const user = await useAuth()
+})
+
+export function useAuth() {
+  return useSession(useEvent())
+}
+```
+
+
+## A third way?
+
+There's a couple of frameworks that don't really fit the explicit context pattern mentioned above: FastAPI and NestJS. Both have in common an extremlly handy (and cursed) feature, that is, that those frameworks can detect what values the funcions need to be inyected from types.
+
+```py
+from fastapi import FastAPI, Path, Depends
+from typing import Annotated
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class User(BaseModel):
+    name: str
+
+def get_user(name: Annotated[str, Path(alias="userId")]):
+    return User(name=name)
+
+@app.get("/{userId}")
+def handle(user: Annotated[User, Depends(get_user)]):
+    return f"Hello, {user.name}"
+```
+
+```ts
+import { Controller, Get, Injectable, Param } from '@nestjs/common';
+
+@Injectable()
+export class UserService {
+  getUser(name: string) {
+    return { name };
+  }
+}
+
+@Controller()
+export class AppController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get('/:userId')
+  getHello(@Param('userId') userId: string): string {
+    return `Hello, ${this.userService.getUser(userId).name}`;
+  }
+}
+```
+
+
+
+
 
 ### Other Examples
 
