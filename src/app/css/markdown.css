@@ -36,6 +36,28 @@ body:has(.with-progress) #progress {
 	color: theme("colors.forest.300");
 }
 
+.header-anchor {
+	position: relative;
+	scroll-margin-top: 1.8rem;
+}
+
+.header-anchor::before {
+	position: absolute;
+	left: -1em;
+	color: theme("colors.forest.800");
+}
+
+.header-anchor:hover::before {
+	color: theme("colors.forest.600");
+	transition: color 0.1s ease;
+}
+
+@media screen(md) {
+	.header-anchor::before {
+		content: "#";
+	}
+}
+
 .shiki {
 	padding: theme("spacing.3") theme("spacing.4");
 }
