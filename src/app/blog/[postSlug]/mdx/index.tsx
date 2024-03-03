@@ -1,5 +1,3 @@
-"use server";
-
 import { MDXRemoteProps, MDXRemote } from "next-mdx-remote-client/rsc";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
