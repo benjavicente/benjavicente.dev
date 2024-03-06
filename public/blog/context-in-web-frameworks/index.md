@@ -1,6 +1,6 @@
 ---
 title: Context in Web Frameworks
-date: 2024-03-05
+date: 2024-03-06
 description: "Exploring different patterns of context passing in web frameworks"
 ---
 
