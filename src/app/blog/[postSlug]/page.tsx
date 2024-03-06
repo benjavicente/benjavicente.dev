@@ -40,17 +40,19 @@ export async function generateMetadata({ params }: { params: { postSlug: string 
 	return {
 		title,
 		description,
+		category: "blog",
+		authors: [{ name: "Benja Vicente", url: "https://benjavicente.dev" }],
 		openGraph: {
 			title,
 			type: "article",
-			images: [`/${params.postSlug}/og.png`],
+			images: [`blog/${params.postSlug}/og.png`],
 		},
 		twitter: {
 			card: "summary_large_image",
 			title,
 			description,
 			site: "/",
-			images: [`/${params.postSlug}/og.png`],
+			images: [`blog/${params.postSlug}/og.png`],
 		},
 	};
 }
