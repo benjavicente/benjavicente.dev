@@ -4,7 +4,7 @@ import { getPosts } from "../../getPosts";
 export default async function Blog() {
 	const posts = await getPosts();
 	return (
-		<main className="limit-width p-2">
+		<main className="limit-width flex flex-col gap-4 p-2">
 			{posts.map((post) => (
 				<Link key={post.slug} href={`/blog/${post.slug}/`} className="magic-border block px-4 py-6 transition-all duration-300">
 					<article>

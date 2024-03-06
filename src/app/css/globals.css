@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./magicBorder.css";
+@import "./markdown.css";
+
+/* Global */
+html {
+	background: hsl(196, 47%, 11%);
+	color: hsl(200, 40%, 96%);
+}
+
+/* Utils */
+
+.limit-width {
+	max-width: theme("screens.sm");
+	margin: 0 auto;
+}

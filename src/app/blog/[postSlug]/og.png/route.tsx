@@ -13,7 +13,7 @@ function OGImage({ post }: { post: Post }) {
 			style={{
 				width: "400px",
 				height: "210px",
-				padding: "2rem",
+				padding: "1.5rem 2rem",
 				background: colors.forest[900],
 				transform: "scale(3)",
 				transformOrigin: "top left",
@@ -26,7 +26,7 @@ function OGImage({ post }: { post: Post }) {
 				style={{
 					display: "flex",
 					flexDirection: "column",
-					marginBottom: "16px",
+					marginBottom: "1rem",
 				}}
 			>
 				<h1
@@ -35,7 +35,8 @@ function OGImage({ post }: { post: Post }) {
 						fontSize: "2.25rem",
 						fontWeight: 700,
 						margin: 0,
-						lineHeight: "2.5rem",
+						lineHeight: "2.1rem",
+						marginBottom: "0.2rem",
 					}}
 				>
 					{post.frontmatter.title}

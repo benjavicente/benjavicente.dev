@@ -5,8 +5,9 @@ import { ActiveAwareLink } from "@/components/ActiveAwareLink";
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
+			<div id="progress" />
 			<nav>
-				<header className="limit-width -space-x-0.5 px-4 py-8 text-2xl font-[450] tracking-tight text-forest-100 decoration-orange-500 decoration-2 underline-offset-1">
+				<header className="limit-width text-forest-100 -space-x-0.5 px-4 py-8 text-2xl font-[450] tracking-tight decoration-orange-500 decoration-2 underline-offset-1">
 					<Link href="/" className="underline decoration-orange-500 hover:decoration-double">
 						BenjaVicente
 					</Link>{" "}

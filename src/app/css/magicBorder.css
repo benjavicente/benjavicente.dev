@@ -1,0 +1,45 @@
+@property --magic-border-spacing {
+	syntax: "<number>";
+	initial-value: 1;
+	inherits: false;
+}
+
+@property --magic-border-color {
+	syntax: "<color>";
+	initial-value: theme("colors.forest.700");
+	inherits: false;
+}
+
+.magic-border {
+	--magic-border-dash-size: 4px;
+	--magic-border-dash-thickness: 2px;
+
+	--_g: var(--magic-border-color) calc(var(--magic-border-spacing) * 50%);
+
+	background:
+		linear-gradient(to right, var(--_g), transparent 0%) top repeat-x,
+		linear-gradient(to bottom, var(--_g), transparent 0) right repeat-y,
+		linear-gradient(to left, var(--_g), transparent 0) bottom repeat-x,
+		linear-gradient(to top, var(--_g), transparent 0) left repeat-y;
+
+	--_pr: calc(50% - var(--magic-border-dash-size) / 4);
+	--_pl: calc(50% + var(--magic-border-dash-size) / 4);
+	--_s: var(--magic-border-dash-size);
+	--_t: var(--magic-border-dash-thickness);
+
+	background-size:
+		var(--_s) var(--_t),
+		var(--_t) var(--_s);
+
+	background-position:
+		var(--_pr) 0,
+		100% var(--_pr),
+		var(--_pl) 100%,
+		0 var(--_pl);
+	transition-property: --magic-border-color, --magic-border-spacing;
+}
+
+.magic-border:hover {
+	--magic-border-spacing: 2;
+	--magic-border-color: theme("colors.forest.500");
+}

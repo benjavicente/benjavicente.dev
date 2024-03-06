@@ -2,6 +2,7 @@ import { MDX } from "./mdx";
 import { getPostBySlug } from "../../../getPosts";
 import { Metadata } from "next";
 import fs from "fs";
+import readingTime from "reading-time";
 
 async function getPostComponents(slug: string) {
 	const dir = `./public/blog/${slug}`;
@@ -62,19 +63,21 @@ export default async function Post({ params }: { params: { postSlug: string } })
 
 	return (
 		<>
-			<article className="limit-width px-4 py-6">
+			<article className="limit-width with-progress px-4 py-6">
 				<div className="mb-8">
 					<h1 className="text-4xl font-bold text-orange-500">{frontmatter.title}</h1>
 					<hr className="border-forest-400" />
-					<time dateTime={frontmatter.date.toISOString()} className="text-forest-400">
-						{Intl.DateTimeFormat("en", {
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-						}).format(frontmatter.date)}
-					</time>
+					<div className="text-forest-400">
+						<time dateTime={frontmatter.date.toISOString()}>
+							{Intl.DateTimeFormat("en", {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							}).format(frontmatter.date)}
+						</time>{" "}
+						&middot; {readingTime(content).text}
+					</div>
 				</div>
-
 				<div className="prose prose-invert">
 					<MDX source={content} components={components} />
 				</div>
