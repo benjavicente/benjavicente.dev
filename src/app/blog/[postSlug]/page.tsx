@@ -78,7 +78,7 @@ export default async function Post({ params }: { params: { postSlug: string } })
 						&middot; {readingTime(content).text}
 					</div>
 				</div>
-				<div className="prose prose-invert prose-pre:">
+				<div className="prose prose-invert">
 					<MDX source={content} components={components} />
 				</div>
 			</article>

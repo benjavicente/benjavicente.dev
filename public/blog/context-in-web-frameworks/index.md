@@ -1,7 +1,7 @@
 ---
 title: Context in Web Frameworks
 date: 2024-03-05
-description: "Exploring diferent patterns of context passing in web frameworks"
+description: "Exploring different patterns of context passing in web frameworks"
 ---
 
 ## Some _context_
@@ -17,7 +17,7 @@ const api = new Hono(...);
 const telegram = new Bot(...);
 const github = new Webhooks(...);
 
-// Atach the handlers for every action
+// Attach the handlers for every action
 api.on("GET", "/", (ctx) => ...)
 telegram.on("message", (ctx) => ...)
 github.on("push", (ctx) => ...)
@@ -29,22 +29,22 @@ And annoyingly, the problem lied in the assumption of how each component is call
 
 ```ts
 api.on("POST", "/telegram", (ctx) => {
-  // This method is marked as internal
-  telegram.handleUpdate(await ctx.req.json());
+	// This method is marked as internal
+	telegram.handleUpdate(await ctx.req.json());
 
-  // Bindings to the ctx can't be passed
-  // directly, so a middleware is needed
-  telegram.use((telegramCtx) => {
-    ctx.env = telegramCtx.env;
-  });
-  // for simplicity, the middleware is
-  // added on every request (don't do this)
+	// Bindings to the ctx can't be passed
+	// directly, so a middleware is needed
+	telegram.use((telegramCtx) => {
+		ctx.env = telegramCtx.env;
+	});
+	// for simplicity, the middleware is
+	// added on every request (don't do this)
 });
 
 api.on("POST", "/github", (ctx) => {
-  // The GitHub Webhooks library doesn't
-  // support passing valures to the handler!
-  github.receive({ id, name, payload });
+	// The GitHub Webhooks library doesn't
+	// support passing values to the handler!
+	github.receive({ id, name, payload });
 });
 ```
 
@@ -52,7 +52,7 @@ The 3 libraries, that map an input to a handler, differ in how they create and i
 I ended building my own GitHub webhook utility, and programming hacky workaround for connecting the Telegram bot to the API.
 
 This led me to explore standards or patterns for passing context in web frameworks.
-It's common to heard patterns from object oriented programing, the intricacies of functional programming, or principles in software development.
+It's common to heard patterns from object oriented programming, the intricacies of functional programming, or principles in software development.
 **But what about patterns for passing “context” around?**
 
 Passing information around in a application is a basic common need in software development, an it surprises me that nowhere I have seen different patterns categorized or explored in my (little) years of software development.
@@ -62,6 +62,10 @@ Here a write my thoughts and findings of weeks of research and exploration of di
 Note that I'm not an expert: I learned programming 5 years ago, and haven't started working professionally yet.
 Don't expect me to mention your favorite framework back in the day, or a non popular language.
 
+:::note
+This post isn't as ordered as it could be, and I will leave it as is, because, it's an exploration post ‾\\\_(ツ)\\\_/‾
+:::
+
 ## What is a context?
 
 Context can be interpreted as information in witch something exists or occurs.
@@ -70,7 +74,7 @@ implicit or explicit, derived from other information or be on it's own.
 
 For example, when reserving a sports court, one will have the date and time, the facilities will have the available courts, and there's the weather forecast to check if it is appropriate to play. That's context for making the action of reserving a court.
 
-In code, the specifics of what it is or how is it implemented differs between frameworks. The general idea is that **it's just values used in components**, like some type of handler to make an action.
+In code, the specifics of what it is or how is it implemented differs between frameworks. The general idea is that **it's just values used in components**, like values in some sort of handler to make an action.
 
 It's important to note that it's different from a router and a handler or controller.
 A router maps keys, like a request path, to a handler, a function that can access a context to do something. Example of context in programming are:
@@ -97,16 +101,16 @@ def handler(ctx: Ctx):
     print(ctx.value)
 ```
 
-This is the simpler one: it's just function arguments.
+This is the simpler one: it's just function arguments, a fundamental building block of programming.
 
-Must of the time, this handler is tightly coupled to the router or underlying framework, using a namespace of object to store everything that is needed.
-This is done on [ExpressJS][express], [Fastify][fastify], [Koa][koa], [Hono][hono] and [Django][django].
+Web frameworks, must of the time, have some type of handler tightly coupled to the router or underlying framework, using a namespace of object to store everything that is needed.
+This is done on [Express][express], [Fastify][fastify], [Koa][koa], [Hono][hono] and [Django][django].
 
 ```js
 const router = new Router();
 
 router.get("/", (ctx) => {
-  console.log(ctx.req.value);
+	console.log(ctx.req.value);
 });
 ```
 
@@ -142,11 +146,9 @@ The pattern also applies to user interface **component** libraries, like [React]
 
 ```jsx
 function MyComponent({ value }) {
-  console.log(value);
+	console.log(value);
 }
 ```
-
-{/* TODO: write span with id with directives */}
 
 Another area where this patter applies is to <span id="data-loading">data loading or initialization</span>, like in [`getServerSideProps`][getServerSideProps] in NextJS Pages Router, Vue Option API's [`data`][vue-data], and React Class Components [`constructor`][react-constructor].
 In each of the previous examples, the context is builded to be passed to a handler.
@@ -157,21 +159,21 @@ In each of the previous examples, the context is builded to be passed to a handl
 
 ```ts
 export async function getStaticProps({ params }) {
-  return {
-    props: {
-      user: User.find(params.userId),
-      // ... other unrelated props
-    },
-  };
+	return {
+		props: {
+			user: User.find(params.userId),
+			// ... other unrelated props
+		},
+	};
 }
 ```
 
-The context as arguments can be considered as a **bucket**. Where every important value is put into it, and the handler can take what it needs.
+The context as arguments can be considered as a **bucket** in all examples above. A bucket where every important value is put into it, and the handler can take what it needs.
 The context can be passed to other components that need some values from it.
 
 :::note
 
-In [Vue docs][vue-options], its mentioned that the old Options API provides "guard rails" that guide you to put your code into respective **buckets**. The `data` method could be considered a bucket in that sense.
+In [Vue docs][vue-options], its mentioned that _the old Options API provides "guard rails" that guide you to put your code into respective **buckets**_. The `data` method in the could be considered a bucket builder in that sense, that initialized everything for the bucket.
 
 [vue-options]: https://vuejs.org/guide/extras/composition-api-faq.html#trade-offs
 
@@ -179,7 +181,7 @@ In [Vue docs][vue-options], its mentioned that the old Options API provides "gua
 
 ---
 
-This type of context passing is ideal for simple functions and small applications, where the parameters are few and coupled with the responsibility of the component that receives it.
+This type of context passing is ideal for simple functions and medium applications, where the parameters are few and coupled with the responsibility of the component that receives it.
 
 The drawbacks of this pattern arriases when the application grows, and more context passing is needed to create the desired handler.
 
@@ -207,14 +209,14 @@ function handler(ctx: { name: string, ... }) {
 }
 ```
 
-Imagine if a database conection, user preferences, a logger instance, or other more general available value is needed deep in the application.
+Imagine if a database connection, user preferences, a logger instance, or other more general available value is needed deep in the application.
 Passing those values with this pattern would be far from ideal.
 
 **Unrelated and coupled initialization or loading**, is where multiple, unrelated responsibilities, need's to be passed to the same bucket representing the context. This can be caused by a bottleneck, that is, when multiple things need to be passed thought as the same context object.
 
 The examples mentioned in [data loading](#data-loading) all migrated out of this problem. NextJS uses Server Components, Vue the Composition API, and React uses functional components and hooks, to decouple different unrelated data loading or state initialization.
 
-**Typing the context** inherits the problems mentioned above. Different unrelated types could be coupled to the context, witch might be required in deeply nested functions. Libraries with more Typescript support, like [tRPC](https://trpc.io/) try to give the best DX around that, but one might still end with the problems mentioned above.
+**Typing the context** inherits the problems mentioned above. Different unrelated types could be coupled to the context, witch might be required in deeply nested functions. Libraries with more Typescript support, like [tRPC](https://trpc.io/), try to give the best DX around that, but one might still end with the problems mentioned above.
 
 ### Context as an instance (controller)
 
@@ -224,7 +226,7 @@ class Controller(BaseController):
         print(self.value)
 ```
 
-Called usually by controller, this pattern creates a instance that will hold the context, and a method that will use it.
+Called usually by controller, this pattern **creates a instance that will hold the context**, and a method that will use it.
 
 [rails]: https://rubyonrails.org/
 
@@ -272,7 +274,7 @@ class ExampleController < AppController
   # Mixin or concern pattern (include methods)
   include Auth
 
-  # Class macro pattern (dinamic method generation)
+  # Class macro pattern (dynamic method generation)
   before_all :require_username
 
   # Template method pattern
@@ -298,7 +300,7 @@ response = controller.index
 Excluding the controller code, that would be hidden in a framework, the code is incredibly simple and readable. Patterns like mixins, class macros, and template methods help to create **clear, reusable and uncoupled code**.
 
 The limits of this pattern are the limits of OOP in the language.
-Rails shines thanks to Ruby, while JavaScript lacks good OOP support, specially with TypeScript (see [mixins in TS][ts-mixins]).
+Rails shines thanks to Ruby, while JavaScript lacks good OOP support, specially with TypeScript (see for example [mixins in TS][ts-mixins]).
 
 [ts-mixins]: https://www.typescriptlang.org/docs/handbook/mixins.html
 
@@ -317,7 +319,7 @@ def handler():
 
 Here, some global value, object or function is used to hold context.
 
-The common use case for this type of pattern is in singleton-like objects, like database connections, environment variables, loggers, or other sort of global state.
+The common use case for this type of pattern is in **singleton-like objects**, like database connections, environment variables, loggers, or other sort of global state.
 
 Another use case is **event and state management**. Most UI frameworks store a global variable hidden from the user, and exposes functions to work with it.
 For example, React's `useState`, that works by using a private global variable to determine the current component, and the `use*` functions to work with it.
@@ -326,18 +328,14 @@ For example, React's `useState`, that works by using a private global variable t
 import { useState, useCallback } from "react";
 
 function useCounter() {
-  const [count, setCount] = useState(0);
-  const increment = () => setCount(count + 1);
-  return [count, increment];
+	const [count, setCount] = useState(0);
+	const increment = () => setCount(count + 1);
+	return [count, increment];
 }
 
 function Counter() {
-  const [count, increment] = useCounter();
-  return (
-    <button onClick={() => increment()}>
-      The current count is {count}
-    </button>
-  )
+	const [count, increment] = useCounter();
+	return <button onClick={() => increment()}>The current count is {count}</button>;
 }
 ```
 
@@ -380,10 +378,10 @@ const work = (message: number | string) => console.log(message);
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function once<A extends any[], R>(fn: Fn<A, R>): Fn<A, R> {
-  let v: R | Symbol = Symbol();
-  // If v is the sentry value, assign v to the result value
-  // of the function, and return v. Otherwise, return v.
-  return (...a) => (v === onceSentryValue ? (v = fn(...a)) : v);
+	let v: R | Symbol = Symbol();
+	// If v is the sentry value, assign v to the result value
+	// of the function, and return v. Otherwise, return v.
+	return (...a) => (v === onceSentryValue ? (v = fn(...a)) : v);
 }
 
 const onceWork = once(work);
@@ -393,21 +391,20 @@ onceWork("but this doesn't");
 
 The `once` functions memoizes the result of the function, so it's only called once. The next step is to add a mechanism to inject context when a function is called and clean it after. To avoid `try`/`finally` repetition, a wrapper (or decorator) is needed.
 
-
 ```ts
 // Global store, to store the sentry value for each context
 const contextStore: WeakMap<Symbol, any>[] = [];
 
 function withCtx<R>(fn: () => R): R {
-  // Inject the necessary context to the global store
-  contextStore.push(new WeakMap());
-  try {
-    // Run the given function
-    return fn();
-  } finally {
-    // Clean the context even if the function throws
-    contextStore.pop();
-  }
+	// Inject the necessary context to the global store
+	contextStore.push(new WeakMap());
+	try {
+		// Run the given function
+		return fn();
+	} finally {
+		// Clean the context even if the function throws
+		contextStore.pop();
+	}
 }
 ```
 
@@ -416,20 +413,20 @@ Now, a memoization with that context can be implemented.
 
 ```ts
 function onceCtx<A extends any[], R>(fn: Fn<A, R>): Fn<A, R> {
-  // Unique key per call to once
-  const key = Symbol();
-  return (...args) => {
-    // Get the last ctx pushed to the global store
-    const store = contextStore.at(-1);
-    // Run the function if there's no ctx
-    if (!store) return fn(...args);
-    // If the ctx has has the key, it's memoized, return it
-    if (store.has(key)) return store.get(key);
-    // Otherwise, memoize the result and return it
-    const value = fn(...args);
-    store.set(key, value);
-    return value;
-  };
+	// Unique key per call to once
+	const key = Symbol();
+	return (...args) => {
+		// Get the last ctx pushed to the global store
+		const store = contextStore.at(-1);
+		// Run the function if there's no ctx
+		if (!store) return fn(...args);
+		// If the ctx has has the key, it's memoized, return it
+		if (store.has(key)) return store.get(key);
+		// Otherwise, memoize the result and return it
+		const value = fn(...args);
+		store.set(key, value);
+		return value;
+	};
 }
 
 const onceWorkPerContext = onceCtx(work);
@@ -437,13 +434,13 @@ const onceWorkPerContext = onceCtx(work);
 const otherWork = () => onceWorkPerContext("other");
 
 withCtx(() => {
-  onceWorkPerContext(1);   // Will show 1
-  otherWork();             // Memoized, will not show anything
-  withCtx(() => {
-    otherWork();           // Will show "other"
-    onceWorkPerContext(2); // Memoized
-    onceWorkPerContext(3); // Memoized
-  });
+	onceWorkPerContext(1); // Will show 1
+	otherWork(); // Memoized, will not show anything
+	withCtx(() => {
+		otherWork(); // Will show "other"
+		onceWorkPerContext(2); // Memoized
+		onceWorkPerContext(3); // Memoized
+	});
 });
 ```
 
@@ -456,34 +453,33 @@ The solution is to hook into runtime APIs. In Python, the stdlib [contextvars][c
 [als]: https://nodejs.org/api/async_context.html#class-asynclocalstorage
 [acontext]: https://github.com/tc39/proposal-async-context
 
-
 ```ts
 const asyncCtxStore = new AsyncLocalStorage<WeakMap<Symbol, any>>();
 function withAsyncCtx<R>(callback: () => R): R {
-  return asyncCtxStore.run(new WeakMap(), callback);  // [!code highlight]
+	return asyncCtxStore.run(new WeakMap(), callback); // [!code highlight]
 }
 
 function onceACtx<A extends any[], R>(fn: Fn<A, R>): Fn<A, R> {
-  const key = Symbol();
-  return (...args) => {
-    const store = asyncCtxStore.getStore();  // [!code highlight]
+	const key = Symbol();
+	return (...args) => {
+		const store = asyncCtxStore.getStore(); // [!code highlight]
 
-    if (!store) return fn(...args);
+		if (!store) return fn(...args);
 
-    if (store.has(key)) return store.get(key);
+		if (store.has(key)) return store.get(key);
 
-    const value = fn(...args);
-    store.set(key, value);
-    return value;
-  };
+		const value = fn(...args);
+		store.set(key, value);
+		return value;
+	};
 }
 
 const onceWorkPerAsyncContext = onceACtx(work);
 
 await withAsyncCtx(async () => {
-  onceWorkPerAsyncContext(1);  // This will show 1
-  await wait(100);
-  onceWorkPerAsyncContext(2);  // Memoized, will not show anything
+	onceWorkPerAsyncContext(1); // This will show 1
+	await wait(100);
+	onceWorkPerAsyncContext(2); // Memoized, will not show anything
 });
 ```
 
@@ -494,23 +490,23 @@ const requestStore = new AsyncLocalStorage<Request>();
 
 // Public getter functions
 export function headers(): Headers {
-  const store = requestStore.getStore();
-  if (!store) return new Headers();
-  return store.headers;
+	const store = requestStore.getStore();
+	if (!store) return new Headers();
+	return store.headers;
 }
 
 // Internal for the framework
 function run(action) {
-  const formData = new FormData();
-  formData.append("example", "formdata")
+	const formData = new FormData();
+	formData.append("example", "formdata");
 
-  const path = "random-path-generated-at-build-time";
-  const r = new Request(`https://example.com/_rpc/${path}`, {
-    headers: { example: "header" },
-    body: formData,
-  });
+	const path = "random-path-generated-at-build-time";
+	const r = new Request(`https://example.com/_rpc/${path}`, {
+		headers: { example: "header" },
+		body: formData,
+	});
 
-  requestStore.run(r, async () => action(await r.formData()));
+	requestStore.run(r, async () => action(await r.formData()));
 }
 ```
 
@@ -520,9 +516,9 @@ Then, functions in userland code can be defined as:
 import { headers } from "framework";
 
 async function serverAction(form: FormData) {
-  console.log(form);
-  const headersStore = headers();  // [!code highlight]
-  console.log(headersStore);
+	console.log(form);
+	const headersStore = headers(); // [!code highlight]
+	console.log(headersStore);
 }
 
 run(serverAction); // Automatically called by the framework
@@ -541,7 +537,6 @@ The [experimental feature][nitro-ac] in [Nitro][nitro], the web server that powe
 [vinxi]: https://vinxi.vercel.app/
 
 This pattern work similar to the context as a instance pattern. The `self` or `this` are implicit thanks to a global store, and some of the same patterns, like template method, can be used. So this pattern might as well require discipline and sufficient knowledge to be used properly.
-
 
 ### Context as dependencies (injection)
 
@@ -566,6 +561,7 @@ This pattern powers [FastAPI][fastapi-di], and is used in frameworks like [NestJ
 :::note
 
 I find funny that FastAPI in Python, and NextJS in TypeScript, both read type annotations **at runtime**, event thought they aren't typed languages.
+
 - Python annotations [started as a way to document a function](pep-3107) and now used to **inject dependencies** and other metaprogramming magic.
 - TypeScript types aren't supposed to be read in runtime, but when certain conditions are met ([`emitDecoratorMetadata`][ts-dec-meta]), the type is available, so NestJS and [TypeORM][type-orm] took advantage.
 
@@ -586,7 +582,6 @@ The order of execution could be more implicit that desired.
 Also, there might be limits on where this smart dependency injection can be used,
 for example, in FastAPI, it can only be usen in path operations and it's dependencies.
 
-
 ## Conclusion
 
 I found 4 types of patterns of passing context:
@@ -594,9 +589,9 @@ I found 4 types of patterns of passing context:
 - As a **parameter**, like in most express-like frameworks, where most of information is passed thought a `ctx` object. The main problems are argument drilling and unrelated and coupled initialization.
 - As an **instance**, like in Rails. It allows clear, reusable and uncoupled code, with the limitations been the limits of OOP in the language.
 - As a **global-like**, like global singletons or frameworks like Flask, React and Nitro. The implementation is usually complex, but it's hidden complexly from the user. Has similar capabilities to the instance pattern.
-- As **dependencies**, like in FastAPI. Might provide great DX thanks to static analysis and utilities, but might have stricter limits on where it can be used.
+- As **dependencies**, like in FastAPI. Might provide great DX thanks to static analysis and utilities, but might have stricter limits on how it can be used.
 
-Passing as information as arguments is a fundamental part of programming, but when applications grows, it's important to consider alternatives for key information. 
+Passing as information as arguments is a fundamental part of programming, but when applications grows, it's important to consider alternatives for key information.
 
 Instance based with OOP frameworks has thrived along the years, like Rails, and the showed advantages show why.
 Modern JS frameworks might opt to new and, more experimental, global-like patterns thanks to limitations in JS OOP and the raise of function based composability.
