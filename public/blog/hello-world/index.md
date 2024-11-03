@@ -4,6 +4,15 @@ date: 2024-01-22
 description: First post of the blog
 ---
 
+## Update (03/11/2024):
+
+I probably will end up doing my _blog again_, but with a even more simpler focus: writing notes instead of full blog posts. I like how the structure of this blog ended up, but both the source code needs a refresh and how I write too.
+
+The main things that I want to update from the source code is the (use Tailwind V4 and CVA, plus simplify the styling), bump some dependencies, and separate the content of this page from utilities (like AutoRefresh and auto-refresh).
+
+For the content side, I want to separate notes and blog posts.
+Notes will be unstructured thoughts, while blog posts will try to go deep on a subject, using multiple sources and examples.
+
 ## Hi!
 
 I have created a lot of personal blogs for a while now, but nothing really stuck.
