@@ -4,6 +4,10 @@ date: 2024-11-03
 description: Theres a Router missing since the release React Server Components.
 ---
 
+:::note
+Update 29-11-2024: I plan to make this a standalone page with more diagrams, separating and writing more consistently and visually the 2 sides of frameworks and the missing pieces related to routing. Also, including better example on the problems that I talked where and in the “bucket” antipattern that I explored previously.
+:::
+
 The router is a fundamental part of web applications, or even, al type of software that displays different views based on state.
 Specifically for web applications, the router is in charge of deciding which view to show based on the URL.
 
@@ -24,9 +28,9 @@ So any server side web framework like Rails and Django, build conventions and to
 And it works. In some frameworks event it feels like magic.
 But at some point of developing a complex application, this models starts to show it's main disadvantage. Since it is stateless, on every page, the browser has to render and load all the resources again.
 
-Caching helps for static assets, but when the views has dynamic content, like analytics like interactive components, or when the navigation only changes a small part of the view, it's not enough.
+Caching helps for static assets, but when views have dynamic content, like analytics or interactive component, it's not enough. Specially when the navigation in the app only changes a small part of the view, requiring a full reload of the page.
 
-There isn't a way to navigate without loosing state. And apps are have state.
+There isn't a native way to navigate without loosing state. And apps are have state.
 
 ## We need front end frameworks
 
@@ -92,6 +96,8 @@ while still providing a interactive experience to the user with the InteractiveD
 RSC allows incredible patterns for complex web applications that render static components.
 For example, sites that renders entire static pages from data (like with CMS) could render the layout on the server to be passed to the client, instead of providing the entire page rendering logic and the entire CMS query data to the client (if not careful, witch in really happens a **lot**).
 
+Also, using RSC makes the loader waterfall problem insignificant. Each page could be entirely rendered on the server, so each roundtrip is to the database, and not from the server to the client. This also allows loading composition patterns that aren't possible with client only loading, where data loading can only be done per route.
+
 ## Where we are
 
 - NextJS App dir is the only framework that _works great_ with RSC. There are experimental implementations like [Waku](https://github.com/dai-shi/waku). The React team hasn't provided stables APIs to work with RSC, so the advances of RSC are limited to NextJS.
@@ -115,9 +121,9 @@ This is nothing new, React Router has done this for a while. But lets introduce 
 
 <img src="./router-tree.svg" />
 
-Imagine that if the blue nodes are handled like NextJS App dir, and when a "use client" directive is found on the router, a fully client side router like TanStack Router takes over negation.
+Imagine that if the blue nodes are handled like NextJS App dir, and when a "use client" directive is found on the router, a fully client side router like TanStack Router takes over navigation.
 
-In reality, NextJS implements a client side routing, but it doesn't have the primitives of a traditional client side router. So, how we could add this routing primitives to a mode server based router like NextJS?
+In reality, NextJS implements a “client side” routing, but it doesn't have the primitives of a traditional client side router. So, how we could add this routing primitives to a mode server based router like NextJS?
 
 Going to the basics, routing is going from one view to another. So, let's asume that we are in a route and see the required steps.
 
@@ -126,7 +132,9 @@ Going to the basics, routing is going from one view to another. So, let's asume 
 - From `/notes` to `/notes/new`: Since the route is included on the tree `notes`, the navigation is fully client side.
 - From `/notes/new` to `/home`: The `/home` route could be cached on the client, so it does not require another request to the server.
 
-That seems great, but how would that implemented at a framework level? The answer might [node conditional exports](https://nodejs.org/api/packages.html#conditional-exports) and RSC props. Conditional conditional imports allows us to have different code on the server and client importing the same module (react already does this for RSC). Props can be useful because are serialize to the client only if there are provided to a client component.
+That seems great, but how would that implemented at a framework level?
+There must be a mechanism to change the route behavior depending on the client or server,
+loading to cache the routes in the client, and rendering only the matched route on the server.
 
 ```tsx
 // router-library.server.ts
@@ -180,7 +188,7 @@ export function Notes() {
 }
 ```
 
-I am skipping some details, like:
+Some notes of whats is missing on this example:
 
 - **Caching**. Router nodes might be wrapped on a client component that caches them. One could use a `Map` to cache every component that is part of the router tree. A fancier abroach could use TanStack Query to query, cache and invalidate the components on mutation.
 - **How to handle navigation**. If the requested component is not in the cache, a RSC query should be made to the server, providing the `from` and `to` paths to avoid rendering the entire tree.
@@ -193,13 +201,17 @@ Implementing this is out of scope of this post, and would require implementing a
 ## Final thoughts
 
 React Server Components will have a second breakthrough when a modern router is implemented.
-NextJS App dir is great for server based routing, but when client side navigation is required, it lacks the primitives to do it in a "React way". React Router and TanStack Router are great for client side routing and provide great DX, but SSR introduces problems that are imposible to solve without relaying on server only rendering.
+NextJS App dir is great for server based routing, but when client side navigation is required (from client only navigation to search params), it lacks the primitives to do it in a "React way". React Router and TanStack Router are great for client side routing and provide great DX, but SSR introduces problems that are imposible to solve without relaying on server only rendering.
 
-Separating backend and client routing might allow great patterns that where weird to implement before. Like catch intercepting server side routes with mounted client side routes. Or having a component on a layout change easily depending on the current route.
+Separating backend and client routing might allow great patterns that where weird to implement before. Like intercepting navigation with mounted client side routes that would otherwise go to the server. Or having a component on a layout change easily depending on the current route (NextJS parallel routes, but client side).
 
 So now, we wait.
 Great APIs come with time, and strongly believe that the future of React is bright.
 
 :::note
-Note: The NextJS team [has plans on implementing something like this](https://x.com/feedthejim/status/1842446297841778840).
+The NextJS team [has plans on implementing something like this](https://x.com/feedthejim/status/1842446297841778840).
+:::
+
+:::note
+I am skipping some frameworks like Marko and Qwik, that have novel ideas on framework architecture. I haven't studied them enough to include them in detail, but for what I understand, Marko haves an incredible (specially for its time) architecture for server side rendering, but lacks great client side primitives. Qwik changes how JS is delivered, but looking at the loader pattern, it's routing and loader architecture is similar to other JamStack frameworks.
 :::
