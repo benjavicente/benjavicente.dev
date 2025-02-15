@@ -7,7 +7,7 @@
 
 /* Global */
 html {
-	background: hsl(196, 47%, 11%);
+	background: #0f2229;
 	color: hsl(200, 40%, 96%);
 }
 
@@ -16,4 +16,19 @@ html {
 .limit-width {
 	max-width: theme("screens.sm");
 	margin: 0 auto;
+}
+
+@layer components {
+	/* No pude sobreescribirlo en el archivo correspondiente. */
+	/* TODO: tomar el CSS de prose de tailwind v4 */
+	.prose :where(hr):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+		margin-top: 2em;
+		margin-bottom: 2em;
+	}
+	.prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+		margin-top: 3em;
+	}
+	.prose :where(.prose > :first-child):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+		margin-top: 0;
+	}
 }
