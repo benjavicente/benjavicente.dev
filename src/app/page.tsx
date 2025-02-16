@@ -25,19 +25,25 @@ export default function Home() {
 			<p className="mb-1 text-forest-300">This list is incomplete; you can help by sending me a message.</p>
 			<ul className="list-disc pl-4 marker:text-orange-400 [&_a]:decoration-forest-400">
 				<li>
-					<a href="https://overreacted.io/">Dan Abramov (React)</a>
+					<a href="https://overreacted.io/">Dan Abramov</a> (React)
 				</li>
 				<li>
-					<a href="https://dev.to/ryansolid">Ryan Carniato (SolidJS)</a>
+					The SolidJS community, <a href="https://dev.to/ryansolid">Ryan Carniato</a>
 				</li>
 				<li>
-					<a href="https://leerob.io/">Lee Robinson (NextJS)</a>
+					The <a href="https://www.convex.dev/">Convex team</a>. See <a href="https://stack.convex.dev/tag/Perspectives">their blog</a> and
+					the <a href="https://www.convex.dev/podcast">Databased podcast</a>.
 				</li>
 				<li>
-					<a href="https://twitter.com/PirateSoftware">Jason Thor Hall (Pirate Software)</a>
+					<a href="https://bsky.app/profile/devongovett.bsky.social">
+						Devon Govett, just see [his GitHub profile](https://github.com/devongovett)
+					</a>
 				</li>
 				<li>
-					<a href="https://tiangolo.com/">Sebastían Ramírez (FastAPI)</a>
+					<a href="https://x.com/Jonathan_Blow">Jhonathan Blow</a> and <a href="https://caseymuratori.com/">Casey Muratori</a>
+				</li>
+				<li>
+					<a href="https://bsky.app/profile/piratesoftware.live">Jason Thor Hall (Pirate Software)</a>
 				</li>
 			</ul>
 		</main>
