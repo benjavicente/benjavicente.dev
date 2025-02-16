@@ -7,9 +7,9 @@ description: "Patterns, tools and emerging web technologies that I believe will 
 
 I started writing about patterns, tools, and opinions I would consider if I were to build a framework, since I don't have the time or knowledge to do it.
 
-But I realized that covering opinions, key patterns, and tools, and how that all comes together, is a monumental task for my personal and non active blog 😅
+But then I realized the scope has to high, and the post was becoming a mess 😅
 
-So here is a small part of it: patterns, tools and emerging web technologies that I believe will be important in the future of the JS ecosystem.
+So here is a small part of it: the patterns, tools and emerging web technologies that I believe will be important in the future of the JS ecosystem. 
 
 
 ## Server Components
@@ -111,12 +111,12 @@ console.log(todos) // the todos
 
 Mainly, React Server Components with it's streaming solution: RSC wire format. There isn't documentation specifically about it, so read about [Alvar Lagerlöf's RSC Devtoll](https://www.alvar.dev/blog/creating-devtools-for-react-server-components). Another great solutions are [Seroval](https://github.com/lxsmnsyc/seroval), [used by Solid](https://github.com/lxsmnsyc/seroval/network/dependents?dependent_type=PACKAGE), and [Turbo Stream](https://github.com/jacob-ebey/turbo-stream), [used by Remix](https://github.com/jacob-ebey/turbo-stream/network/dependents?dependent_type=PACKAGE) and in experiments like [Preact Server Components](https://github.com/jacob-ebey/preact-server-components).
 
-Promises are becoming a core primitive for streaming data between client and server in frameworks, from [Remix](https://reactrouter.com/how-to/suspense#1-return-a-promise-from-loader), [NextJS](https://nextjs.org/docs/app/getting-started/fetching-data#with-the-use-hook), [TanStack's Router](https://tanstack.com/router/latest/docs/framework/react/guide/deferred-data-loading), [SvelteKit](https://svelte.dev/docs/kit/load#Streaming-with-promises), and more.
+Promises are becoming a core primitive for streaming data between client and server, from [Remix](https://reactrouter.com/how-to/suspense#1-return-a-promise-from-loader), [NextJS](https://nextjs.org/docs/app/getting-started/fetching-data#with-the-use-hook), [TanStack's Router](https://tanstack.com/router/latest/docs/framework/react/guide/deferred-data-loading), [SvelteKit](https://svelte.dev/docs/kit/load#Streaming-with-promises), and more.
 
 A lot of frameworks implement their own internal implementation due to the need for specific features and optimizations.
 A primitive way to stream objects could be the “JSON 2” for frameworks, providing an interface to send complex JS primitives like promises across the wire.
 
-## Better backed primitives
+## New takes on backend primitives
 
 [AsyncLocalStorage](https://nodejs.org/api/async_context.html#class-asynclocalstorage) is an Node API that allows to create stores (or context) that persists across async calls, that has been stable since [Node 16.4](https://nodejs.org/es/blog/release/v16.4.0).
 
@@ -124,7 +124,7 @@ A primitive way to stream objects could be the “JSON 2” for frameworks, prov
 import { request } from "flask-js";
 
 async function getUser() {
-  return db.users.getByHeader((await request.headers()).Authorization);
+  return db.users.getByHeader(request.headers.Authorization);
 }
 
 handler("/users/me", async () => {
@@ -135,7 +135,7 @@ handler("/users/me", async () => {
 
 Stores allow passing values implicitly. A popular framework that does that pattern is [Flask](https://flask.palletsprojects.com/en/stable/quickstart/#the-request-object), that has a global request proxy that is set to the current request implicitly. In JS, NextJS has started using AsyncLocalStorage to provide dynamic request APIs thought RSC, like with the [`headers()` function](https://nextjs.org/docs/app/api-reference/functions/headers).
 
-This pattern allows creating primitives for a complex and composable system, somehow like React Hooks or Vue's Composition API. Nitro has [experimental support](https://nitro.build/guide/utils#async-context-experimental) to avoid passing the event thought utilities. Even in the browser, React is waiting for the [Async Context TC39 proposal](https://github.com/tc39/proposal-async-context) to [improve state transitions](https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition).
+This pattern allows creating primitives for a complex and composable system, somehow like React Hooks or Vue's Composition API. [Nitro has experimental support](https://nitro.build/guide/utils#async-context-experimental) to avoid passing the event thought utilities. Even in the browser, React is waiting for the [Async Context TC39 proposal](https://github.com/tc39/proposal-async-context) to [improve state transitions](https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition).
 
 ---
 
@@ -159,7 +159,7 @@ But I don't thing that we have clear primitives yet to build on top, like the ot
 
 On the more BaaS side, I want to shout out [Convex](https://docs.convex.dev/home), that has a imperative primitives following the [command-query separation model](https://martinfowler.com/bliki/CommandQuerySeparation.html) with real time and consistent queries and ACID transitions. There are also great innovations in Cloudflare: [SQL DOs](https://blog.cloudflare.com/sqlite-in-durable-objects/) and the soon to be released [container platform](https://blog.cloudflare.com/container-platform-preview/).
 
-## Advancements on tooling
+## Unified tooling
 
 In the same way [Astral](https://astral.sh/), launched at 2022, with VC money, from the development of amazing and rusty tools for Python (Ruff, and then uv at 2024),
 [void0](https://voidzero.dev/) launched at 2024, for the JS ecosystem, from tools like Vite and Oxc.
@@ -167,7 +167,7 @@ In the same way [Astral](https://astral.sh/), launched at 2022, with VC money, f
 Vite released the [environment API](https://vite.dev/guide/api-environment), breaking the constrain of having only client and SSR modes, allowing to target different environments, from different runtimes like node and [workerd](https://github.com/cloudflare/workerd), and different targets like server, SSR, and client builds (like [RSC](https://react.dev/reference/rsc/server-components#:~:text=renders%20ahead%20of%20time%2C%20before%20bundling%2C%20in%20an%20environment%20separate%20from%20your%20client%20app%20or%20SSR%20server.)). This will make frameworks to be _“just a vite plugin”_.
 
 ```ts
-// Example configuration file on React Router
+// Example configuration file on React Router (Remix)
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
   tests: { browser: { enabled: true }}
