@@ -1,6 +1,6 @@
 ---
 title: Web stuff that got my interest
-date: 2025-02-25
+date: 2025-02-16
 description: "Patterns, tools and emerging web technologies that I believe will be important in the future of the JS ecosystem"
 ---
 
