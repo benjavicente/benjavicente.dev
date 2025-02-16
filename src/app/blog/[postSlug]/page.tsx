@@ -65,7 +65,7 @@ export default async function Post({ params }: { params: { postSlug: string } })
 
 	return (
 		<>
-			<article className="limit-width with-progress px-4 py-6">
+			<article className="limit-width with-progress px-4 pb-24 pt-6">
 				<div className="mb-8">
 					<h1 className="text-4xl font-bold text-orange-500">{frontmatter.title}</h1>
 					<hr className="border-forest-400" />
