@@ -35,9 +35,8 @@ export default function Home() {
 					the <a href="https://www.convex.dev/podcast">Databased podcast</a>.
 				</li>
 				<li>
-					<a href="https://bsky.app/profile/devongovett.bsky.social">
-						Devon Govett, just see [his GitHub profile](https://github.com/devongovett)
-					</a>
+					<a href="https://bsky.app/profile/devongovett.bsky.social">Devon Govett</a>, just see{" "}
+					<a href="https://github.com/devongovett">his GitHub profile</a>
 				</li>
 				<li>
 					<a href="https://x.com/Jonathan_Blow">Jhonathan Blow</a> and <a href="https://caseymuratori.com/">Casey Muratori</a>
