@@ -202,3 +202,5 @@ Where a lot of those systems fails is on the extendability of the backend. Most 
 - The [TC39 Temporal Proposal](https://github.com/tc39/proposal-temporal)
 - [`moveBefore`, move DOM with state preservation](https://github.com/whatwg/dom/issues/1255). See [React](https://github.com/facebook/react/pull/31596) and [HTMX](https://htmx.org/examples/move-before/)
 - [Bun](https://bun.sh/)'s approach as an all-in-one JS toolkit
+- Advances of the [One Stack](https://onestack.dev/)
+- [Base UI](https://base-ui.com/react/overview/about)
