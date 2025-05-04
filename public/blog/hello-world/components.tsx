@@ -18,7 +18,7 @@ export function Confetti() {
 				setTimeout(() => setHasConfeti(false), 300);
 			}}
 			disabled={hasConfeti}
-			className="flex w-full flex-col items-center justify-center rounded bg-forest-700 disabled:bg-forest-800"
+			className="flex w-full flex-col items-center justify-center rounded-sm bg-forest-700 disabled:bg-forest-800"
 		>
 			{hasConfeti ? "🎉" : null} yay {hasConfeti ? "🎉" : null}
 			<ConfettiExplosion active={hasConfeti} config={confettiConfig} />

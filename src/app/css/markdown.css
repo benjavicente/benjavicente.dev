@@ -18,22 +18,22 @@ body:has(.with-progress) #progress {
 	top: 0;
 	width: 100%;
 	height: 2px;
-	background: theme("colors.orange.500");
+	background: var(--color-orange-500);
 	transform-origin: 0 50%;
 	animation: grow-progress auto linear;
 	animation-timeline: --page-scroll;
 }
 
 .prose > aside {
-	border-left: theme("spacing.1") solid theme("colors.forest.600");
-	padding-left: theme("spacing.4");
-	color: theme("colors.forest.400");
+	border-left: --spacing(1) solid var(--color-forest-600);
+	padding-left: --spacing(4);
+	color: var(--color-forest-400);
 }
 
 .prose > aside a,
 .prose > aside code,
 .prose > aside strong {
-	color: theme("colors.forest.300");
+	color: var(--color-forest-300);
 }
 
 .header-anchor {
@@ -44,22 +44,22 @@ body:has(.with-progress) #progress {
 .header-anchor::before {
 	position: absolute;
 	left: -1em;
-	color: theme("colors.forest.800");
+	color: var(--color-forest-800);
 }
 
 .header-anchor:hover::before {
-	color: theme("colors.forest.600");
+	color: var(--color-forest-600);
 	transition: color 0.1s ease;
 }
 
-@media screen(md) {
+@media (width >= theme(--breakpoint-md)) {
 	.header-anchor::before {
 		content: "#";
 	}
 }
 
 .shiki {
-	padding: theme("spacing.3") theme("spacing.4");
+	padding: --spacing(3) --spacing(4);
 }
 
 .shiki > code {
@@ -71,16 +71,16 @@ body:has(.with-progress) #progress {
 .shiki .highlighted,
 .shiki .remove,
 .shiki .add {
-	margin: 0 calc(-1 * theme("spacing.4"));
-	padding: 0 theme("spacing.4");
-	border-radius: theme("borderRadius.lg");
+	margin: 0 calc(-1 * (--spacing(4)));
+	padding: 0 --spacing(4);
+	border-radius: var(--radius-lg);
 	display: inline-block;
 	border-radius: unset;
-	width: calc(100% + theme("spacing.8"));
+	width: calc(100% + (--spacing(8)));
 }
 
 .shiki .highlighted {
-	background: theme("colors.forest.800");
+	background: var(--color-forest-800);
 }
 
 .shiki .diff::before {
@@ -108,10 +108,10 @@ body:has(.with-progress) #progress {
 }
 
 .shiki .highlighted-word {
-	background: theme("colors.forest.800");
-	padding: theme("spacing[0.5]");
-	margin: calc(-1 * theme("spacing[0.5]"));
-	border-radius: theme("borderRadius.lg");
+	background: var(--color-forest-800);
+	padding: --spacing(0.5);
+	margin: calc(-1 * (--spacing(0.5)));
+	border-radius: var(--radius-lg);
 }
 
 .shiki.has-focused .line:not(.focused) {
