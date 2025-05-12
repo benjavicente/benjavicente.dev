@@ -1,6 +1,6 @@
 ---
 title: "HTTP Cache: Finding a performance improvement on frameworks on Cloudflare Workers"
-date: 2025-05-04
+date: 2025-05-11
 description: "How a hackathon project led me to find a simple way to speed up startup times of web apps on Cloudflare Workers"
 ---
 
