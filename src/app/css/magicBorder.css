@@ -11,6 +11,7 @@
 }
 
 .magic-border {
+	--magic-border-color: var(--color-forest-700);
 	--magic-border-dash-size: 4px;
 	--magic-border-dash-thickness: 2px;
 
