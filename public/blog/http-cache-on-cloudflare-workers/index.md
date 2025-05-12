@@ -4,9 +4,9 @@ date: 2025-05-11
 description: "How a hackathon project led me to find a simple way to speed up startup times of web apps on Cloudflare Workers"
 ---
 
-At a hackathon (Platanus Build Night, 25/04/2025), I experimented with Cloudflare Workers' new Static Assets feature, witch allowed me to build email handling and a static site with the same domain _and_ deployment with ease.
+At a hackathon (Platanus Build Night, 25/04/2025), I experimented with Cloudflare Workers' new Static Assets feature, which allowed me to build email handling and a static site with the same domain _and_ deployment with ease.
 
-Static Assets allows to, as it name says, to have static assets deployed with Workers, to serve complete web apps with all the features of Cloudflare, which wasn't possible before. It was [relatively new (08/04/2025)](http://blog.cloudflare.com/full-stack-development-on-cloudflare-workers/), after a 6-month beta.
+Static Assets allows to, as its name says, to have static assets deployed with Workers, to serve complete web apps with all the features of Cloudflare, which wasn't possible before. It was [relatively new (08/04/2025)](http://blog.cloudflare.com/full-stack-development-on-cloudflare-workers/), after a 6-month beta.
 
 This addition improves the support of deployments of popular frameworks, like Next.js with [OpenNext](https://opennext.js.org/cloudflare). Going back to the story,
 for the hackathon I used a simple Vite + Tanstack Router app, since I didn't need SSR and queries were to my Convex backend, with the addition of Email Workers.
@@ -26,7 +26,7 @@ To understand the problem, I need a detour to explain about _caching_.
 
 ## HTTP Caching
 
-There's _a lot_ that could be talked about caching. Here, I will only outline some patterns that I believe are important to know. While it's about HTTP caching, some might be applicable to other types of systems caching between two components or computers with resources associated with a distinct key.
+There's _a lot_ that could be talked about caching. Here, I will only outline some patterns that I believe are important to know. While it's about HTTP caching, some might be applicable to other types of caching between two components or computers with resources associated with a distinct key.
 
 
 ### Without caching
@@ -153,7 +153,7 @@ So, to fix this problem, it's necessary to create a `_headers` file that adds sp
 
 Lets look at the performance with the cache populated and the new headers:
 
-![Performance panel of Chrome. The 3 groups of requests of CSS ans JS were reduced to be nearly instantaneous.](./with-disk-cache.png)
+![Performance panel of Chrome. The 3 groups of requests of CSS and JS were reduced to be nearly instantaneous.](./with-disk-cache.png)
 
 From **1250ms to around 900ms**, just by adding the appropriate cache headers!
 
@@ -228,7 +228,7 @@ I can pass that to the framework context, and use it like this to check authenti
 const authenticated = await context.auth.waitAuthenticated();
 ```
 
-The only additional piece that's missing, but is irrelevant here, which is invalidating the context when the user logs out.
+The only additional piece that's missing, which is irrelevant here, is invalidating the context when the user logs out.
 Anyways, here is the final result:
 
 
