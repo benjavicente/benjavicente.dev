@@ -65,9 +65,9 @@ export default async function Post({ params }: { params: { postSlug: string } })
 
 	return (
 		<>
-			<article className="limit-width with-progress px-4 pb-24 pt-6">
+			<article className="limit-width with-progress px-4 pt-6 pb-24">
 				<div className="mb-8">
-					<h1 className="text-4xl font-bold text-orange-500">{frontmatter.title}</h1>
+					<h1 className="mb-2 text-4xl font-semibold text-orange-500">{frontmatter.title}</h1>
 					<hr className="border-forest-400" />
 					<div className="text-forest-400">
 						<time dateTime={frontmatter.date.toISOString()}>
@@ -80,7 +80,7 @@ export default async function Post({ params }: { params: { postSlug: string } })
 						&middot; {readingTime(content).text}
 					</div>
 				</div>
-				<div className="prose prose-invert">
+				<div className="prose prose-invert text-justify">
 					<MDX source={content} components={components} />
 				</div>
 			</article>

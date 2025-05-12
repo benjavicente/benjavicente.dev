@@ -6,11 +6,12 @@
 
 @property --magic-border-color {
 	syntax: "<color>";
-	initial-value: theme("colors.forest.700");
+	initial-value: var(--color-forest-700);
 	inherits: false;
 }
 
 .magic-border {
+	--magic-border-color: var(--color-forest-700);
 	--magic-border-dash-size: 4px;
 	--magic-border-dash-thickness: 2px;
 
@@ -41,5 +42,5 @@
 
 .magic-border:hover {
 	--magic-border-spacing: 2;
-	--magic-border-color: theme("colors.forest.500");
+	--magic-border-color: var(--color-forest-500);
 }

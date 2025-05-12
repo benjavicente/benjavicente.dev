@@ -13,11 +13,12 @@ function OGImage({ post }: { post: Post }) {
 			style={{
 				width: "400px",
 				height: "210px",
-				padding: "1.5rem 2rem",
+				padding: "1.5rem 1rem",
 				background: colors.forest[900],
 				transform: "scale(3)",
 				transformOrigin: "top left",
 				display: "flex",
+				justifyContent: "flex-end",
 				flexDirection: "column",
 				fontFamily: "inter",
 			}}
@@ -31,18 +32,19 @@ function OGImage({ post }: { post: Post }) {
 			>
 				<h1
 					style={{
-						color: "rgb(249, 115, 22)",
-						fontSize: "2.25rem",
-						fontWeight: 700,
+						color: "#ff6900",
+						fontSize: "1.3rem",
+						fontWeight: 600,
 						margin: 0,
-						lineHeight: "2.1rem",
+						textWrap: "balance",
+						lineHeight: "1.1",
 						marginBottom: "0.2rem",
 					}}
 				>
 					{post.frontmatter.title}
 				</h1>
-				<hr style={{ borderColor: colors.forest[400], width: "100%", margin: 0 }} />
-				<time style={{ color: colors.forest[400], lineHeight: "24px" }}>
+				<hr style={{ borderColor: colors.forest[600], width: "100%", margin: 0 }} />
+				<time style={{ color: colors.forest[600], lineHeight: "24px" }}>
 					{Intl.DateTimeFormat("en", {
 						year: "numeric",
 						month: "long",
@@ -50,7 +52,7 @@ function OGImage({ post }: { post: Post }) {
 					}).format(post.frontmatter.date)}
 				</time>
 			</div>
-			<p style={{ color: colors.forest[300], margin: 0 }}>{post.frontmatter.description}</p>
+			<p style={{ color: colors.forest[400], margin: 0 }}>{post.frontmatter.description}</p>
 		</div>
 	);
 }
