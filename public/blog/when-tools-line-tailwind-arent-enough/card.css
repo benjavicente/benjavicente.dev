@@ -1,0 +1,54 @@
+/* Use the page Tailwind Config */
+/* TODO: even as we reference the TailwindCSS config, it doesn't work 100%. The config should reference this file. */
+@reference "../../../src/app/css/global.css";
+
+@layer utilities {
+	:root {
+		/* Defining styles at a distance like this isn't great, but os the thing that works on most browsers */
+		--card-root-flex: column;
+		--card-p: 0.5rem;
+		--card-border: 1px solid var(--color-forest-500);
+		--card-divider-mx: calc(-1 * var(--card-p));
+		--card-divider-my: calc(0.5 * var(--card-p));
+	}
+}
+
+@layer utilities {
+	.flow-col {
+		--flow: "col";
+		/* Define styles at a distance, assuming the if css function doesn't exists */
+		--card-root-flex: column;
+		--card-divider-mx: calc(-1 * var(--card-p));
+		--card-divider-my: calc(0.5 * var(--card-p));
+	}
+
+	.flow-row {
+		--flow: "row";
+		/* Define styles at a distance, assuming the if css function doesn't exists */
+		--card-root-flex: row;
+		--card-divider-mx: calc(0.5 * var(--card-p));
+		--card-divider-my: calc(-1 * var(--card-p));
+	}
+}
+
+@layer components {
+	.card-root {
+		@apply border-forest-500 mx-auto flex rounded border;
+		flex-direction: var(--card-root-flex);
+		padding: var(--card-p);
+	}
+
+	.card-title {
+		@apply text-shadow-forest-400 text-2xl font-bold;
+	}
+
+	.card-divider {
+		border-right: var(--card-border);
+		border-bottom: var(--card-border);
+		border-right-width: 1px;
+		border-bottom-width: 1px;
+		/* if(style(--flow: "row"): calc(-1 * var(--card-p)); else: calc(0.5 * var(--card-p))); */
+		margin-inline: var(--card-divider-mx);
+		margin-block: var(--card-divider-my);
+	}
+}

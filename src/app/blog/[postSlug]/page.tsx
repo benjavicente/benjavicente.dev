@@ -67,7 +67,7 @@ export default async function Post({ params }: { params: { postSlug: string } })
 		<>
 			<article className="limit-width with-progress px-4 pt-6 pb-24">
 				<div className="mb-8">
-					<h1 className="mb-2 text-4xl font-semibold text-orange-500">{frontmatter.title}</h1>
+					<h1 className="mb-2 text-2xl font-semibold text-balance text-orange-500 md:text-3xl">{frontmatter.title}</h1>
 					<hr className="border-forest-400" />
 					<div className="text-forest-400">
 						<time dateTime={frontmatter.date.toISOString()}>

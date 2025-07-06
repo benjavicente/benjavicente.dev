@@ -63,7 +63,7 @@ body:has(.with-progress) #progress {
 }
 
 .shiki > code {
-	width: 100%;
+	width: fit-content;
 	display: block;
 	position: relative;
 }

@@ -16,6 +16,7 @@
 		"@shikijs/transformers": "^1.1.1",
 		"acorn": "^8.11.3",
 		"acorn-jsx": "^5.3.2",
+		"clsx": "^2.1.1",
 		"gray-matter": "^4.0.3",
 		"hastscript": "^9.0.0",
 		"mdast-util-directive": "^3.0.0",
@@ -54,5 +55,6 @@
 		"tailwindcss": "^4.1.5",
 		"typescript": "^5",
 		"ws": "^8.16.0"
-	}
+	},
+	"packageManager": "pnpm@10.11.0+sha256.a69e9cb077da419d47d18f1dd52e207245b29cac6e076acedbeb8be3b1a67bd7"
 }
