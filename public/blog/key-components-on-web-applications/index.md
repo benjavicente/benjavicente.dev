@@ -1,14 +1,14 @@
 ---
 title: "28 concepts of frontend development"
 date: "2025-07-28"
-description: "Some core concepts that you will probably encounter in frontend development."
+description: "A compilation of core concepts that you will probably encounter in frontend development."
 ---
 
 As a mainly frontend developer who is writing a frontend development blog,
 I must say, maybe with a small bias, that frontend development starts harder than most of
 backend development. It's an unavoidable distributed problem!
 
-But honestly, one really big pain point is that frontend tooling and concepts are usually not that well documented, and are often intermingled with each other. Usually, there are guides and documentation about specific tools, and not really about the concepts around them.
+But honestly, one of the biggest paint points is that frontend tooling and concepts are usually lack documentation, and are often intermingled with each other. Usually, there are guides and documentation about specific tools, and not really about the concepts around them.
 
 So, as any software developer, here I will present you my own convention of concepts and tools that I believe are important for frontend development. This post doesn't intend to cover historical context or libraries, but I highly recommend you to explore on your own.
 
@@ -25,7 +25,7 @@ There are many approaches to rendering with different underlying implementations
 - JSX, a subset of JavaScript, which is used by libraries like [react](https://react.dev/), [preact](https://preactjs.com/), and [solid](https://solidjs.com/), which has a minimal transformation step to convert XML-like syntax into JavaScript function calls that the framework expects.
 - Native web components, which integrate horizontally with the underlying technology instead of building on top, providing a more portable solution.
 
-Rendering solutions are usually integrated with other tools, but usually provide at minimum **composability and reusability of UI**, with protection against XSS attacks.
+Rendering solutions are usually integrated with other tools, but usually provide at minimum **composability and reusability of UI**, along with protection against XSS attacks.
 
 ### 2. Behavioral elements
 
@@ -45,10 +45,9 @@ The main goal of behavioral elements is to provide advanced UI primitives that c
 - Manually tracking state, which can be done with simple variables and functions, or with lightweight frameworks like [alpine.js](https://alpinejs.dev/). This is usually recommended for small, server-first applications, since it's harder to scale in large applications.
 - Some type of “dirty checking”, which re-runs a function when some state changes and updates based on those changes. For example, Angular with [zone.js](https://github.com/angular/angular/tree/main/packages/zone.js), Svelte 3 with its compiler, or even React with its virtual DOM. Some implementations add significant runtime overhead.
 - Store or event-based, where a push-based subscription model is used to update parts of the UI when it changes. This may require manual handling of subscriptions when chaining stores, but can be integrated into the underlying rendering framework. The implementation is usually lightweight and doesn't require globals. For example, [rxjs](https://rxjs.dev/) on Angular and Svelte, and Svelte's [store contract](https://svelte.dev/docs/svelte/stores).
-- Signals, which provide [reactive programming](https://en.wikipedia.org/wiki/Reactive_programming)-like state management where the underlying algorithm for tracking updates is global and indirectly given. Many frameworks use it, like [solid](https://docs.solidjs.com/concepts/intro-to-reactivity), [vue](https://vuejs.org/guide/extras/reactivity-in-depth), [angular](https://angular.dev/guide/signals), [svelte](https://svelte.dev/docs/svelte/what-are-runes), and more. There is an effort to standardize signals, for example, with the [tc39 signals proposal](https://github.com/tc39/proposal-signals), but since some frameworks are still experimenting (see async signals in [solid](https://www.youtube.com/live/xnmvxWEK25I?t=839) and [angular](https://angular.dev/guide/signals/resource)), it may be early.
+- Signals, which provide [reactive programming](https://en.wikipedia.org/wiki/Reactive_programming)-like state management where the underlying algorithm for tracking updates is global and indirectly given. Many frameworks use it, like [solid](https://docs.solidjs.com/concepts/intro-to-reactivity), [vue](https://vuejs.org/guide/extras/reactivity-in-depth), [angular](https://angular.dev/guide/signals), [svelte](https://svelte.dev/docs/svelte/what-are-runes), and more. There is an effort to standardize signals, for example, with the [tc39 signals proposal](https://github.com/tc39/proposal-signals), but since some frameworks are still experimenting (see async signals in [solid](https://www.youtube.com/live/xnmvxWEK25I?t=839) and [angular](https://angular.dev/guide/signals/resource)), it may be too early for a standard.
 
-The main goal of state systems should be to provide **composable primitives that allow UI reactivity**, ideally in a performant way. While manually tracking subscriptions or dependencies works, the DX and performance of implicit tracking tends to be better in most cases.
-
+The main goal of state systems should be to provide **composable primitives that allow UI reactivity**, ideally in a performant way. While manually tracking subscriptions or dependencies works, the developer experience and performance of implicit tracking tends to be superior in most cases.
 
 ### 4. Global state
 
@@ -129,10 +128,10 @@ Usually, routing frameworks are used with a router. Examples are [nextjs](https:
 
 **How class names are defined.**
 
-Naming CSS classes was a big problem, since classes are global and can conflict with each other in a large application. To address this, different methodologies to name and group styles can be used.
+Naming CSS classes has historically been a large problem, since classes are global and can conflict with each other in a large application. To address this, different methodologies to name and group styles can be used.
 
 - [OOCSS](https://github.com/stubbornella/oocss/wiki) treats page elements as objects and references them by class names. [BEM](https://getbem.com/) is a naming methodology for class names. [SMACSS](https://smacss.com/) is a way to organize the CSS code. All three can be used together to write modular CSS code at scale. But, with current tooling, the overhead of following those methodologies isn't worth it anymore.
-- [Atomic CSS](https://www.smashingmagazine.com/2013/10/challenging-css-best-practices-atomic-approach/) solves the problem by writing a large set of thin, utility-first classes instead of big and component-first classes, making the naming more explicit and simple. This moves the styling bloat to the HTML instead of the CSS file. Since creating those utility classes by hand is a lot of work, it's usually used with generators like [atomizer](https://acss-io.github.io/atomizer/) and, the modern and popular option, [tailwindcss](https://tailwindcss.com/).
+- [Atomic CSS](https://www.smashingmagazine.com/2013/10/challenging-css-best-practices-atomic-approach/) solves the problem by writing a large set of thin, utility-first classes instead of big and component-first classes, making the naming more explicit and simple. This moves the styling _bloat_ to the HTML instead of the CSS file. Since creating those utility classes by hand is a lot of work, it's usually used with generators like [atomizer](https://acss-io.github.io/atomizer/) and, the modern and popular option, [tailwindcss](https://tailwindcss.com/).
 - For simpler sites, one could use the styles provided by CSS frameworks like [bootstrap](https://getbootstrap.com) and [bulma](https://bulma.io/), and write custom CSS only when necessary.
 
 Some options use a preprocessor to parse a custom syntax or extension of CSS, reducing the style complexity by adding compiled variables, nesting, and other features. Some examples are [sass](https://sass-lang.com/) and the tailwindcss pre-processor.
@@ -163,7 +162,7 @@ Sometimes, styles of class names could be reused across the application. For exa
 }
 ```
 
-We might want to allow certain styles to be overridden, but others we might want to be unwritable. To do that, there are mainly 3 options:
+We might want to allow certain styles to be overridden, but others we might want to make it non-overridable. To do that, there are mainly 3 options:
 
 - Fight with specificity: Creating less or more specific selectors to define the precedence of styles, and using `!important` when we need to make a style unwritable (or we lost the precedence battle).
 - Custom class appliance algorithm: Having an algorithm that applies classes as one would expect. A common utility for this is [tailwind-merge](https://www.npmjs.com/package/tailwind-merge). Note that the order of classes in HTML doesn't matter, but in CSS it does. So the algorithm could remove conflicting classes or apply them in specific conditions.
@@ -369,7 +368,7 @@ Static analysis of code has many use cases, like formatting with [prettier](http
 
 Some integrations exist, for example, [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier) with [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) and [typescript-eslint](https://typescript-eslint.io/), but usually with a big overhead compared to running those tools separately.
 
-One problem is that these tools are configured separately and can clash with each other. There are attempts to unify this toolchain, like [biome](https://biomejs.dev/), [oxc](https://oxc.rs/), and [deno](https://docs.deno.com/runtime/reference/cli/lint/). One big challenge is reducing scope, for example, working on non-JS files or type-aware rules. Biome has the problem that it implements its own toolchain from scratch, so it can misalign with the native tools, and oxc isn't as mature, but is experimenting with native integrations like tsgo (TODO: will be released today, on the 28th of July).
+One problem is that these tools are configured separately and can clash with each other. There are attempts to unify this toolchain, like [biome](https://biomejs.dev/), [oxc](https://oxc.rs/), and [deno](https://docs.deno.com/runtime/reference/cli/lint/). One big challenge is reducing scope, for example, working on non-JS files or type-aware rules. Biome has the problem that it implements its own toolchain from scratch, so it can misalign with the native tools, and oxc isn't as mature, but is experimenting with native integrations like tsgo.
 
 ### 23. Testing
 
@@ -449,4 +448,17 @@ One of the most interesting tools, outside of those provided by package managers
 Besides cleaning the list of all dependencies, there are also tools to help upgrade the codebase when migrating versions or libraries. These are usually written with [jscodeshift](https://github.com/facebook/jscodeshift), and some frameworks provide their own library of codemods to update versions, like [Next.js](https://www.npmjs.com/package/@next/codemod) and [Storybook](https://www.npmjs.com/package/@storybook/codemod).
 
 If you need to change your own codebase, you can use **generative AI to build codemods**, so you can have reproducible scripts that can be applied to large codebases without problems.
+
+---
+
+## Items that didn't make the cut for this post
+
+- Security
+- Internalization
+- Transpilation
+- Persistent data storages on the client
+- JS Runtimes (node, deno, bun, workerd)
+- Router server strategies (backend-based vs frontend-based)
+
+I might cover some of those in a detailed post in the future, but I had to leave it like that for my sanity and to match the 28/07 date :)
 
