@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AutoRefreshPosts } from "./AutoRefreshPosts";
 import { ActiveAwareLink } from "@/components/ActiveAwareLink";
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +17,6 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
 				</header>
 			</nav>
 			{children}
-			{process.env.NODE_ENV === "development" ? <AutoRefreshPosts /> : null}
 		</>
 	);
 }
