@@ -34,7 +34,6 @@ export function remarkCallouts(): Transformer<Root> {
 			if (!parent || index === undefined || !isNodeDirective(node)) return;
 			if (node.type !== "containerDirective") transformUnhandledDirective(node, index, parent);
 			const data = node.data || (node.data = {});
-			const attributes = node.attributes || {};
 			if (node.name === "note") {
 				data.hName = "aside";
 				data.hProperties = h("aside").properties;

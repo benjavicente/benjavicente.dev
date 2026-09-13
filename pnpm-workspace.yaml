@@ -1,0 +1,9 @@
+allowBuilds:
+  unrs-resolver: true
+  # Wrangler's install scripts download native binaries. CI installs the lockfile before deploy.
+  esbuild: true
+  workerd: true
+  sharp: true
+
+update:
+  githubActions: true

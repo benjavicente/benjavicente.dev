@@ -1,5 +1,5 @@
 import { MDX } from "./mdx";
-import { getPostBySlug } from "../../../getPosts";
+import { formatPostDate, getPostBySlug } from "../../../getPosts";
 import { Metadata } from "next";
 import fs from "fs";
 import readingTime from "reading-time";
@@ -31,8 +31,9 @@ async function getPostComponents(slug: string) {
 	}
 }
 
-export async function generateMetadata({ params }: { params: { postSlug: string } }): Promise<Metadata> {
-	const post = await getPostBySlug(params.postSlug);
+export async function generateMetadata({ params }: { params: Promise<{ postSlug: string }> }): Promise<Metadata> {
+	const { postSlug } = await params;
+	const post = await getPostBySlug(postSlug);
 
 	const title = post.frontmatter.title;
 	const description = post.frontmatter.description;
@@ -45,20 +46,21 @@ export async function generateMetadata({ params }: { params: { postSlug: string 
 		openGraph: {
 			title,
 			type: "article",
-			images: [`blog/${params.postSlug}/og.png`],
+			images: [`blog/${postSlug}/og.png`],
 		},
 		twitter: {
 			card: "summary_large_image",
 			title,
 			description,
 			site: "/",
-			images: [`blog/${params.postSlug}/og.png`],
+			images: [`blog/${postSlug}/og.png`],
 		},
 	};
 }
 
-export default async function Post({ params }: { params: { postSlug: string } }) {
-	const post = await getPostBySlug(params.postSlug);
+export default async function Post({ params }: { params: Promise<{ postSlug: string }> }) {
+	const { postSlug } = await params;
+	const post = await getPostBySlug(postSlug);
 	const { content, frontmatter, slug } = post;
 
 	const components = await getPostComponents(slug);
@@ -70,12 +72,8 @@ export default async function Post({ params }: { params: { postSlug: string } })
 					<h1 className="mb-2 text-2xl font-semibold text-balance text-orange-500 md:text-3xl">{frontmatter.title}</h1>
 					<hr className="border-forest-400" />
 					<div className="text-forest-400">
-						<time dateTime={frontmatter.date.toISOString()}>
-							{Intl.DateTimeFormat("en", {
-								year: "numeric",
-								month: "long",
-								day: "numeric",
-							}).format(frontmatter.date)}
+						<time dateTime={frontmatter.date.toISOString().slice(0, 10)}>
+							{formatPostDate(frontmatter.date)}
 						</time>{" "}
 						&middot; {readingTime(content).text}
 					</div>

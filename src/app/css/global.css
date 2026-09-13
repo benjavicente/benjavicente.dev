@@ -5,44 +5,54 @@
 @import "./markdown.css" layer(utilities);
 
 @theme {
-	--color-forest-50: #f8fcfc;
-	--color-forest-100: #f1f9f8;
-	--color-forest-200: #e1eeef;
-	--color-forest-300: #cbe1e1;
-	--color-forest-400: #94b5b8;
-	--color-forest-500: #65888b;
-	--color-forest-600: #48676a;
-	--color-forest-700: #345356;
-	--color-forest-800: #1d363a;
-	--color-forest-900: #0f2429;
-	--color-forest-950: #021217;
+    --color-forest-50: #f8fcfc;
+    --color-forest-100: #f1f9f8;
+    --color-forest-200: #e1eeef;
+    --color-forest-300: #cbe1e1;
+    --color-forest-400: #94b5b8;
+    --color-forest-500: #65888b;
+    --color-forest-600: #48676a;
+    --color-forest-700: #345356;
+    --color-forest-800: #1d363a;
+    --color-forest-900: #0f2429;
+    --color-forest-950: #021217;
 }
 
 @utility prose {
-	/* TODO: tomar el CSS de prose de tailwind v4 */
-	& :where(hr):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-		margin-top: 2em;
-		margin-bottom: 2em;
-	}
-	& :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-		margin-top: 3em;
-	}
-	& :where(& > :first-child):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-		margin-top: 0;
-	}
+    /* TODO: tomar el CSS de prose de tailwind v4 */
+    h1,
+    h2,
+    h3 {
+        text-wrap: balance;
+        text-align: left;
+    }
+
+    & :where(hr):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+    & :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+        margin-top: 3em;
+    }
+    &
+        :where(& > :first-child):not(
+            :where([class~="not-prose"], [class~="not-prose"] *)
+        ) {
+        margin-top: 0;
+    }
 }
 
 @layer utilities {
-	/* Global */
-	html {
-		background: #0f2229;
-		color: hsl(200, 40%, 96%);
-	}
+    /* Global */
+    html {
+        background: #0f2229;
+        color: hsl(200, 40%, 96%);
+    }
 
-	/* Utils */
+    /* Utils */
 
-	.limit-width {
-		max-width: var(--breakpoint-sm);
-		margin: 0 auto;
-	}
+    .limit-width {
+        max-width: var(--breakpoint-sm);
+        margin: 0 auto;
+    }
 }

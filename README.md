@@ -7,6 +7,6 @@ Personal site and blog build with:
 - [TailwindCSS](https://tailwindcss.com/) for styling.
 - [Shiki](https://shiki.style/) for code highlighting.
 - [Satori](https://github.com/vercel/satori) via [ImageResponse](https://nextjs.org/docs/app/api-reference/functions/image-response) for creating link previews images.
-- Custom Hot Reloading for non-js files with a Dan Abramov's [script](https://github.com/gaearon/overreacted.io/blob/main/watcher.js).
+- Markdown posts are imported as raw text so the dev server reloads when they change.
 
 The page is fully static, deployed via GitHub Actions to Cloudflare.
