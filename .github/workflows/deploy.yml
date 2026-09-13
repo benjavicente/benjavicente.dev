@@ -41,7 +41,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Wrangler is a devDependency, so this uses `pnpm exec` and does not `pnpm add` it again.
           packageManager: pnpm
-          command: pages deploy out --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
-          # This triggers a GitHub Deployment event
+          # Branch and commit hash are required for wrangler-action to open a GitHub Deployment.
+          command: pages deploy out --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }} --branch=${{ github.ref_name }} --commit-hash=${{ github.sha }} --commit-dirty=false
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
