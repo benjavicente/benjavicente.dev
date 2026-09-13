@@ -17,16 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@v2
         with:
-          version: 8
-
-      - name: Install node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: "pnpm"
+          runtime: node@20
+          cache: true
 
       - name: NextJS build cache
         # https://nextjs.org/docs/pages/building-your-application/deploying/ci-build-caching
@@ -37,9 +32,6 @@ jobs:
           key: ${{ runner.os }}-nextjs-${{ hashFiles('./pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Generate static site
         run: pnpm run build
