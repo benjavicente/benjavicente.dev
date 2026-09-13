@@ -1,4 +1,4 @@
-import { ReactNode, createElement } from "react";
+import { type ImgHTMLAttributes, type ReactNode, createElement } from "react";
 
 function slugify(str: string) {
 	return str
@@ -54,6 +54,12 @@ function createHeading(level: number) {
 	};
 }
 
+function MarkdownImage(props: ImgHTMLAttributes<HTMLImageElement>) {
+	// React 19 preloads <img> while decoding a prefetched RSC payload. Lazy images are skipped,
+	// so illustrations are not downloaded until the post is actually shown.
+	return createElement("img", { ...props, loading: "lazy", decoding: "async" });
+}
+
 export const headingsComponents = {
 	h1: createHeading(1),
 	h2: createHeading(2),
@@ -61,4 +67,5 @@ export const headingsComponents = {
 	h4: createHeading(4),
 	h5: createHeading(5),
 	h6: createHeading(6),
+	img: MarkdownImage,
 };
