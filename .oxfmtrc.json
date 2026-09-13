@@ -1,0 +1,11 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"useTabs": true,
+	"printWidth": 140,
+	"sortPackageJson": false,
+	"sortTailwindcss": {
+		"stylesheet": "./src/app/css/global.css",
+		"functions": ["clsx"]
+	},
+	"ignorePatterns": ["**/*.md", "public/blog/**", ".next/**", "out/**"]
+}

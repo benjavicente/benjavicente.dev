@@ -20,7 +20,7 @@ jobs:
       - name: Install pnpm and Node.js
         uses: pnpm/setup@v2
         with:
-          runtime: node@20
+          runtime: node@22
           cache: true
 
       - name: NextJS build cache

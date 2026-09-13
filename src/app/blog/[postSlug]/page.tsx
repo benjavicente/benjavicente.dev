@@ -31,8 +31,9 @@ async function getPostComponents(slug: string) {
 	}
 }
 
-export async function generateMetadata({ params }: { params: { postSlug: string } }): Promise<Metadata> {
-	const post = await getPostBySlug(params.postSlug);
+export async function generateMetadata({ params }: { params: Promise<{ postSlug: string }> }): Promise<Metadata> {
+	const { postSlug } = await params;
+	const post = await getPostBySlug(postSlug);
 
 	const title = post.frontmatter.title;
 	const description = post.frontmatter.description;
@@ -45,20 +46,21 @@ export async function generateMetadata({ params }: { params: { postSlug: string 
 		openGraph: {
 			title,
 			type: "article",
-			images: [`blog/${params.postSlug}/og.png`],
+			images: [`blog/${postSlug}/og.png`],
 		},
 		twitter: {
 			card: "summary_large_image",
 			title,
 			description,
 			site: "/",
-			images: [`blog/${params.postSlug}/og.png`],
+			images: [`blog/${postSlug}/og.png`],
 		},
 	};
 }
 
-export default async function Post({ params }: { params: { postSlug: string } }) {
-	const post = await getPostBySlug(params.postSlug);
+export default async function Post({ params }: { params: Promise<{ postSlug: string }> }) {
+	const { postSlug } = await params;
+	const post = await getPostBySlug(postSlug);
 	const { content, frontmatter, slug } = post;
 
 	const components = await getPostComponents(slug);

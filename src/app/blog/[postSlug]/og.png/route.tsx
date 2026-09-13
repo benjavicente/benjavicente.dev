@@ -57,8 +57,9 @@ function OGImage({ post }: { post: Post }) {
 	);
 }
 
-export async function GET(request: Request, { params }: { params: { postSlug: string } }) {
-	const post = await getPostBySlug(params.postSlug);
+export async function GET(_request: Request, { params }: { params: Promise<{ postSlug: string }> }) {
+	const { postSlug } = await params;
+	const post = await getPostBySlug(postSlug);
 	return new ImageResponse(<OGImage post={post} />, {
 		fonts: [
 			{ data: inter700, name: "inter", weight: 700, style: "normal" },

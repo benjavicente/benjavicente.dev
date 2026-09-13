@@ -7,8 +7,8 @@ function slugify(str: string) {
 		.trim() // Remove whitespace from both ends of a string
 		.replace(/\s+/g, "-") // Replace spaces with -
 		.replace(/&/g, "-and-") // Replace & with 'and'
-		.replace(/[^\w\-]+/g, "") // Remove all non-word characters except for -
-		.replace(/\-\-+/g, "-"); // Replace multiple - with single -
+		.replace(/[^\w-]+/g, "") // Remove all non-word characters except for -
+		.replace(/--+/g, "-"); // Replace multiple - with single -
 }
 
 function getText(node: ReactNode) {
@@ -20,8 +20,11 @@ function getText(node: ReactNode) {
 		return text;
 	} else if (typeof node === "string") {
 		return node;
-	} else if (node !== null && typeof node === "object" && "props" in node && node.props.children) {
-		return getText(node.props.children);
+	} else if (node !== null && typeof node === "object" && "props" in node) {
+		const props = node.props;
+		if (props && typeof props === "object" && "children" in props) {
+			return getText(props.children as ReactNode);
+		}
 	}
 	throw new Error(`Could not get text from heading in node: ${node}`);
 }

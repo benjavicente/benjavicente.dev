@@ -8,7 +8,7 @@ import { remarkCallouts } from "./callouts";
 
 const MDXRemoteOptions: MDXRemoteProps["options"] = {
 	mdxOptions: {
-		remarkPlugins: [remarkGfm, remarkDirective, remarkCallouts, remarkMdxEvalCodeBlock, () => (e) => {}],
+		remarkPlugins: [remarkGfm, remarkDirective, remarkCallouts, remarkMdxEvalCodeBlock, () => () => {}],
 		rehypePlugins: [[rehypeShiki, rehypeShikiOptions]],
 	},
 };

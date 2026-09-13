@@ -6,7 +6,8 @@
 
 @property --magic-border-color {
 	syntax: "<color>";
-	initial-value: var(--color-forest-700);
+	/* @property initial values must be absolute; var() is invalid here. forest-700 */
+	initial-value: #345356;
 	inherits: false;
 }
 
