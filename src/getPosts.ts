@@ -13,9 +13,19 @@ const postSources = import.meta.glob("./blog-posts/*/index.md", {
 
 const frontmatterSchema = z.object({
 	title: z.string(),
+	// Date-only strings parse as UTC midnight. Format in UTC so local offsets don't shift the day.
 	date: z.coerce.date(),
 	description: z.string(),
 });
+
+export function formatPostDate(date: Date) {
+	return Intl.DateTimeFormat("en", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		timeZone: "UTC",
+	}).format(date);
+}
 
 export const getPosts = cache(async () => {
 	const postsMeta = Object.entries(postSources).flatMap(([path, source]) => {

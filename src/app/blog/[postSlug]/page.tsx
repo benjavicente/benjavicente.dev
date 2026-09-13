@@ -1,5 +1,5 @@
 import { MDX } from "./mdx";
-import { getPostBySlug } from "../../../getPosts";
+import { formatPostDate, getPostBySlug } from "../../../getPosts";
 import { Metadata } from "next";
 import fs from "fs";
 import readingTime from "reading-time";
@@ -72,12 +72,8 @@ export default async function Post({ params }: { params: Promise<{ postSlug: str
 					<h1 className="mb-2 text-2xl font-semibold text-balance text-orange-500 md:text-3xl">{frontmatter.title}</h1>
 					<hr className="border-forest-400" />
 					<div className="text-forest-400">
-						<time dateTime={frontmatter.date.toISOString()}>
-							{Intl.DateTimeFormat("en", {
-								year: "numeric",
-								month: "long",
-								day: "numeric",
-							}).format(frontmatter.date)}
+						<time dateTime={frontmatter.date.toISOString().slice(0, 10)}>
+							{formatPostDate(frontmatter.date)}
 						</time>{" "}
 						&middot; {readingTime(content).text}
 					</div>
